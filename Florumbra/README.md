@@ -1,5 +1,10 @@
 # FLORUMBRA
 
+## CONCEPT
+
+![image](https://github.com/user-attachments/assets/c474c28f-6be3-4009-ae4b-79e57011483a)
+
+
 ## LORE
 
 ### A kingdom named Aldrica
