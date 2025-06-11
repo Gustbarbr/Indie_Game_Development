@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -8,7 +9,13 @@ public class PlayerControl : MonoBehaviour
     Rigidbody2D rb;
 
     // Movespeed
-    [SerializeField] float velocity = 5f;
+    [SerializeField] float velocity;
+    [SerializeField] float baseSpeed;
+    [SerializeField] float sprintVelocity;
+
+    public Slider hpBar;
+    public Slider manaBar;
+    public Slider staminaBar;
 
     void Start()
     {
@@ -22,7 +29,6 @@ public class PlayerControl : MonoBehaviour
 
     public void Movement()
     {
-        // Pega o valor inteiro do input (-1, 0 ou 1)
         float HorizontalMovement = Input.GetAxisRaw("Horizontal");
 
         rb.velocity = new Vector2(HorizontalMovement * velocity, rb.velocity.y);

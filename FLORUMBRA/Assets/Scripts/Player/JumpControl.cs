@@ -9,8 +9,8 @@ public class JumpControl : MonoBehaviour
 
     // Pulo
     [SerializeField] int jumpHeight;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] LayerMask groundLayer;
     bool canJump;
 
     void Start()
