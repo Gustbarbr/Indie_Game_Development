@@ -1,10 +1,5 @@
 # FLORUMBRA
 
-## CONCEPT
-
-![image](https://github.com/user-attachments/assets/c474c28f-6be3-4009-ae4b-79e57011483a)
-
-
 ## LORE
 
 ### A kingdom named Aldrica
@@ -27,8 +22,6 @@ Forest dwellers buried the heart, believing it to belong to a fallen adventurer.
 
 ### The Last Hope
 The forest dwellers turned to their most powerful warrior—**Layla**, a druid attuned to magic and nature. She now sets out to confront the darkness and uncover the truth behind the undead rising in her home.
-
-
 
 ## DESCRIPTION AND OBJECTIVES
 An elf druid defends her forest using bow and arrow, along with summonable creatures of nature, against the dark forces of a necromancer who is corrupting the forest with his army of undead. The player will explore the forest, which at first will have few enemies and more vegetation, but as the journey progresses the forest will become more corrupt, with less vegetation and more undead walking through it. The player's goal is to explore the forest, grow stronger and face the bosses that are scattered throughout the map, in order to prevent the forest from being destroyed by the necromancer.
