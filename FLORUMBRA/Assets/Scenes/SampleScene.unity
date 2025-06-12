@@ -744,6 +744,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -826,6 +827,20 @@ Transform:
   - {fileID: 1877198577}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7488446631cf5e94f8888f0f87387543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1913572767}
+  offset: {x: 0, y: 0, z: -1}
 --- !u!1 &653019767
 GameObject:
   m_ObjectHideFlags: 0
@@ -1654,6 +1669,7 @@ MonoBehaviour:
   velocity: 5
   baseSpeed: 5
   sprintVelocity: 2.5
+  exhaustion: 0
   hpBar: {fileID: 492970517}
   manaBar: {fileID: 1771892999}
   staminaBar: {fileID: 1622456646}
