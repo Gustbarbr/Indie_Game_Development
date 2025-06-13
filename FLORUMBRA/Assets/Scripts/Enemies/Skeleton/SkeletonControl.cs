@@ -5,30 +5,48 @@ using UnityEngine;
 public class SkeletonControl : MonoBehaviour
 {
     Rigidbody2D rb;
-    [SerializeField] float enemyPatrolMovespeed;
-    [SerializeField] float enemyChaseMovespeed;
 
+    // Velocidade de movimento
+    [SerializeField] float enemyPatrolSpeed;
+    [SerializeField] float enemyChaseSpeed;
+
+    // Pontos de patrulha
     [SerializeField] Transform A;
     [SerializeField] Transform B;
-
     private Transform target;
 
-    void Start()
+    // Verificar se player foi detectado
+    public bool playerDetected = false;
+
+    PlayerControl player;
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        player = playerObject.GetComponent<PlayerControl>();
         transform.position = A.position;
-        target = B; // Começa indo para o ponto B
+        target = B;
     }
 
-    void Update()
+    private void Update()
     {
-        // Move o inimigo em direção ao ponto-alvo
-        transform.position = Vector2.MoveTowards(transform.position, target.position, enemyPatrolMovespeed * Time.deltaTime);
-
-        if (Vector2.Distance(transform.position, target.position) < 0.1f)
+        if (!playerDetected)
         {
-            // Seria um if traget == A, target = B, ou seja se estiver próximo do A, troca o target para B
-            target = (target == A) ? B : A;
+            // Faz com que o inimigo se move de sua posição atual até a posição alvo (A ou B) na velocidade definida
+            transform.position = Vector2.MoveTowards(transform.position, target.position, enemyPatrolSpeed * Time.deltaTime);
+
+            // Se a distância dos dois pontos for menor que 0.1, ele faz uma checagem de alvo, se o alvo atual for A troca para B, se for B troca para A
+            if (Vector2.Distance(transform.position, target.position) < 0.1f)
+            {
+                if (target == A) target = B;
+                else target = A;
+            }
+        }
+
+        else if (playerDetected) {
+
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, enemyChaseSpeed * Time.deltaTime);
 
         }
     }
