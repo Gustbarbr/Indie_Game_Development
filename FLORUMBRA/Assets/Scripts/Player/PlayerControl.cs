@@ -9,9 +9,9 @@ public class PlayerControl : MonoBehaviour
     Rigidbody2D rb;
 
     // Movespeed
-    [SerializeField] float velocity;
-    [SerializeField] float baseSpeed;
-    [SerializeField] float sprintVelocity;
+    [SerializeField] float velocity = 5;
+    [SerializeField] float baseSpeed = 5;
+    [SerializeField] float sprintVelocity = 2.5f;
     [SerializeField] bool exhaustion = false;
 
     public Slider hpBar;
@@ -23,17 +23,28 @@ public class PlayerControl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Movement();
     }
 
     public void Movement()
     {
-        float HorizontalMovement = Input.GetAxisRaw("Horizontal");
+        float horizontalMovement = Input.GetAxisRaw("Horizontal");
 
         bool sprint = Input.GetKey(KeyCode.LeftShift);
         float stamina = staminaBar.value;
+
+        // Muda para onde o player olha de acordo com input do teclado
+        if(horizontalMovement == 1)
+        {
+            transform.localScale = new Vector2(1, 1);
+        }
+
+        else if (horizontalMovement == -1)
+        {
+            transform.localScale = new Vector2(-1, 1);
+        }
 
         // Se o player apertar para correr e não estiver exausto, vai começar a correr
         if (sprint && !exhaustion)
@@ -65,7 +76,7 @@ public class PlayerControl : MonoBehaviour
         // Atualiza a barra de stamina
         staminaBar.value = stamina;
 
-        rb.velocity = new Vector2(HorizontalMovement * velocity, rb.velocity.y);
+        rb.velocity = new Vector2(horizontalMovement * velocity, rb.velocity.y);
     }
 
 }
