@@ -14,26 +14,40 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float sprintVelocity = 2.5f;
     [SerializeField] bool exhaustion = false;
 
+    // HUD
     public Slider hpBar;
     public Slider manaBar;
     public Slider staminaBar;
+
+    private float stamina = 1f;
+
+    // Atk
+    public GameObject arrowPrefab;
+    private float attackCoolDown = 0.5f;
+    private float arrowRecharge;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
+    // Por conta do rigidbody é mais recomendado usar fixedupdate
     void FixedUpdate()
     {
-        Movement();
+        PlayerMovement();
     }
 
-    public void Movement()
+    // Por ser necessário atualizar frame a frama é mais recomendado usar update
+    void Update()
+    {
+        ShootArrow();
+    }
+
+    public void PlayerMovement()
     {
         float horizontalMovement = Input.GetAxisRaw("Horizontal");
 
         bool sprint = Input.GetKey(KeyCode.LeftShift);
-        float stamina = staminaBar.value;
 
         // Muda para onde o player olha de acordo com input do teclado
         if(horizontalMovement == 1)
@@ -60,7 +74,8 @@ public class PlayerControl : MonoBehaviour
         else if (exhaustion)
         {
             velocity = baseSpeed - sprintVelocity;
-            stamina += 0.1f * Time.deltaTime;
+            if (!Input.GetButton("Fire1"))
+                stamina += 0.1f * Time.deltaTime;
             // Se a stamina chegar a 30% pode voltar a correr
             if (stamina >= 0.3f) exhaustion = false;
         }
@@ -69,7 +84,8 @@ public class PlayerControl : MonoBehaviour
         else if (!sprint)
         {
             velocity = baseSpeed;
-            stamina += 0.2f * Time.deltaTime;
+            if (!Input.GetButton("Fire1"))
+                stamina += 0.2f * Time.deltaTime;
             if (stamina > 1) stamina = 1;
         }
 
@@ -79,4 +95,34 @@ public class PlayerControl : MonoBehaviour
         rb.velocity = new Vector2(horizontalMovement * velocity, rb.velocity.y);
     }
 
+    public void ShootArrow()
+    {
+        // Tempo entre cada ataque
+        arrowRecharge += Time.deltaTime;
+
+        // Enquanto o botão for pressionado, stamina será gasta
+        if (Input.GetButton("Fire1")){
+            stamina -= 0.1f * Time.deltaTime;
+            if (stamina <= 0) stamina = 0;
+        }
+
+        // Só pode atacar se o botão do mouse for solto, estiver fora do tempo de recarga e tiver stamina
+        else if (Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0.1f)
+        {
+            // Determina a direção da flecha com base na escala do jogador, ou seja, para onde está olhando
+            float direction = transform.localScale.x;
+
+            // Cria a flecha um pouco a frente do player para evitar colisões erradas
+            Vector3 spawnPosition = transform.position + new Vector3(transform.localScale.x * 0.5f, 0, 0);
+
+            // Instância a arrow com todos seus valores de posição e rotação
+            GameObject arrow = Instantiate(arrowPrefab, spawnPosition, Quaternion.identity);
+
+            // Define a direção que a flecha será disparada com base na variável direction
+            arrow.GetComponent<ArrowControl>().SetDirection(direction);
+
+            // Entra em tempo de recarga
+            arrowRecharge = 0;
+        }
+    }
 }

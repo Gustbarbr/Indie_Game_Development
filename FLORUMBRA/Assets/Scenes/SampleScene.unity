@@ -2631,6 +2631,7 @@ MonoBehaviour:
   hpBar: {fileID: 492970517}
   manaBar: {fileID: 1771892999}
   staminaBar: {fileID: 1622456646}
+  arrowPrefab: {fileID: 7235316080921566783, guid: c1dd51323c25f574c9c7a20d2df54860, type: 3}
 --- !u!50 &1913572764
 Rigidbody2D:
   serializedVersion: 4
@@ -2646,7 +2647,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 2
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -2773,7 +2774,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293f13bb0d293bf4c9fd0d7c68cc38bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpHeight: 7
   groundCheck: {fileID: 1903195454}
   groundLayer:
     serializedVersion: 2
