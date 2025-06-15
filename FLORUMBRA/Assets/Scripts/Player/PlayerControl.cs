@@ -101,8 +101,9 @@ public class PlayerControl : MonoBehaviour
         arrowRecharge += Time.deltaTime;
 
         // Enquanto o botão for pressionado, stamina será gasta
-        if (Input.GetButton("Fire1")){
-            stamina -= 0.1f * Time.deltaTime;
+        if (Input.GetButton("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0.1f)
+        {
+            stamina -= 0.3f * Time.deltaTime;
             if (stamina <= 0) stamina = 0;
         }
 

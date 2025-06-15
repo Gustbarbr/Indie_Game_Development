@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ArrowControl : MonoBehaviour
 {
-    private float arrowVelocity = 10;
+    private float arrowVelocity = 15;
     private float arrowDirection;
 
     public void SetDirection(float dir)
