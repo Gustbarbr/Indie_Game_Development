@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
-
     Rigidbody2D rb;
 
     // Movespeed

@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkeletonControl : MonoBehaviour
 {
     Rigidbody2D rb;
+    public Slider hp;
 
     // Velocidade de movimento
     [SerializeField] float enemyPatrolSpeed = 1.5f;
@@ -17,7 +20,6 @@ public class SkeletonControl : MonoBehaviour
 
     // Verificar se player foi detectado
     public bool playerDetected = true;
-
     PlayerControl player;
 
     private void Start()
@@ -65,6 +67,20 @@ public class SkeletonControl : MonoBehaviour
             {
                 Vector2 direction = (player.transform.position - transform.position).normalized;
                 rb.velocity = new Vector2(direction.x * enemyChaseSpeed, rb.velocity.y);
+            }
+        }
+    }
+
+    // Recebe dano da flecha, e se o hp for menor ou igual a 0, morre
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Arrow"))
+        {
+            hp.value -= 0.25f;
+            Destroy(collision.gameObject);
+
+            if(hp.value <= 0){
+                Destroy(this.gameObject);
             }
         }
     }

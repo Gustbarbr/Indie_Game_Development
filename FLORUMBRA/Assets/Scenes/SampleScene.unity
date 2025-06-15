@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70ae5a2921d2c7045a5e677d78005028, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: {fileID: 646267601}
   enemyPatrolSpeed: 1.5
   enemyChaseSpeed: 2.5
   A: {fileID: 2125197205}
@@ -2439,7 +2440,7 @@ GameObject:
   - component: {fileID: 1896833645}
   - component: {fileID: 1896833646}
   - component: {fileID: 1896833647}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Detection Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2454,7 +2455,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1896833644}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
