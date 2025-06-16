@@ -24,6 +24,7 @@ public class PlayerControl : MonoBehaviour
     public GameObject arrowPrefab;
     private float attackCoolDown = 0.5f;
     private float arrowRecharge;
+    public float arrowCharge = 0; // Dano do player, pode ser carregado ao segurar o botão para causar mais dano
 
     void Start()
     {
@@ -102,12 +103,15 @@ public class PlayerControl : MonoBehaviour
         // Enquanto o botão for pressionado, stamina será gasta
         if (Input.GetButton("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0.1f)
         {
+            // Carrega a flecha até seu tempo máximo
+            if (arrowCharge <= 1)
+                arrowCharge += Time.deltaTime * 2;
             stamina -= 0.3f * Time.deltaTime;
             if (stamina <= 0) stamina = 0;
         }
 
         // Só pode atacar se o botão do mouse for solto, estiver fora do tempo de recarga e tiver stamina
-        else if (Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0.1f)
+        else if ((Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0) || staminaBar.value <=0)
         {
             // Determina a direção da flecha com base na escala do jogador, ou seja, para onde está olhando
             float direction = transform.localScale.x;

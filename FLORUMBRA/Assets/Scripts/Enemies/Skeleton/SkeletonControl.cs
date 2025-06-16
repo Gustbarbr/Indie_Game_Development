@@ -76,8 +76,12 @@ public class SkeletonControl : MonoBehaviour
     {
         if (collision.CompareTag("Arrow"))
         {
-            hp.value -= 0.25f;
+            // Causa dano na barra de vida, levando em conta o dano do player (o quanto o ataque foi carregado) dividido pela defesa (no caso multiplicar por numeros abaixo de 0 funciona como divisao)
+            hp.value -= player.arrowCharge * 0.25f;
+            // Destruir a flecha
             Destroy(collision.gameObject);
+            // Resetar o dano do player
+            player.arrowCharge = 0;
 
             if(hp.value <= 0){
                 Destroy(this.gameObject);
