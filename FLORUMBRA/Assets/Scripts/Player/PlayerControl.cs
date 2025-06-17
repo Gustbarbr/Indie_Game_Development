@@ -18,6 +18,7 @@ public class PlayerControl : MonoBehaviour
     public Slider manaBar;
     public Slider staminaBar;
 
+    private float mana = 1f;
     private float stamina = 1f;
 
     // Atk
@@ -25,6 +26,10 @@ public class PlayerControl : MonoBehaviour
     private float attackCoolDown = 0.5f;
     private float arrowRecharge;
     public float arrowCharge = 0; // Dano do player, pode ser carregado ao segurar o botão para causar mais dano
+
+    // Summons
+    public GameObject summonPoint;
+    public GameObject wolf;
 
     void Start()
     {
@@ -41,6 +46,7 @@ public class PlayerControl : MonoBehaviour
     void Update()
     {
         ShootArrow();
+        SummonCompanion();
     }
 
     public void PlayerMovement()
@@ -128,5 +134,19 @@ public class PlayerControl : MonoBehaviour
             // Entra em tempo de recarga
             arrowRecharge = 0;
         }
+    }
+
+    public void SummonCompanion()
+    {
+        mana += 0.05f * Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2)
+        {
+            mana -= 0.2f;
+            wolf.gameObject.SetActive(true);
+            wolf.transform.position = summonPoint.transform.position;
+        }
+
+        manaBar.value = mana;
+            
     }
 }
