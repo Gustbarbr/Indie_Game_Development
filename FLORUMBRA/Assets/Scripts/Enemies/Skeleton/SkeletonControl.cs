@@ -32,6 +32,15 @@ public class SkeletonControl : MonoBehaviour
 
     private void FixedUpdate()
     {
+        SkeletonMovement();
+
+        // Se o player se afastar muito do inimigo, ele deixa de perseguir
+        if(Vector2.Distance(transform.position, player.transform.position) > 15)
+            playerDetected = false;
+    }
+
+    void SkeletonMovement()
+    {
         if (playerDetected == false)
         {
             // Faz com que o inimigo se move de sua posição atual até a posição alvo (A ou B) na velocidade definida

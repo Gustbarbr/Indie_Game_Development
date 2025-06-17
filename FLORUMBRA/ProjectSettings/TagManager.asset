@@ -5,17 +5,18 @@ TagManager:
   serializedVersion: 2
   tags:
   - Arrow
+  - Summon
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Ground
   - Arrow
   - Detection Range
-  - 
+  - Enemy Ground Collider
   - 
   - 
   - 

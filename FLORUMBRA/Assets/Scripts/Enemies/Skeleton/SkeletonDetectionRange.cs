@@ -13,12 +13,4 @@ public class SkeletonDetectionRange : MonoBehaviour
             skeleton.playerDetected = true;
         }
     }
-
-    private void OnTriggerExit2D(Collider2D collider)
-    {
-        if (collider.CompareTag("Player"))
-        {
-            skeleton.playerDetected = false;
-        }
-    }
 }

@@ -139,14 +139,14 @@ public class PlayerControl : MonoBehaviour
     public void SummonCompanion()
     {
         mana += 0.05f * Time.deltaTime;
+
+        // Checa se o botão pressionado for o "Q" e tem mana o suficiente
         if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2)
         {
             mana -= 0.2f;
+            wolf.transform.position = transform.position;
             wolf.gameObject.SetActive(true);
-            wolf.transform.position = summonPoint.transform.position;
         }
-
         manaBar.value = mana;
-            
     }
 }
