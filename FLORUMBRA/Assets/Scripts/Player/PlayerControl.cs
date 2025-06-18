@@ -148,6 +148,7 @@ public class PlayerControl : MonoBehaviour
             wolf.transform.position = new Vector2 (transform.position.x, 0);
             wolf.gameObject.SetActive(true);
         }
+
         manaBar.value = mana;
     }
 }
