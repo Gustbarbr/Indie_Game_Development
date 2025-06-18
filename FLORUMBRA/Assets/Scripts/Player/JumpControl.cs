@@ -10,7 +10,7 @@ public class JumpControl : MonoBehaviour
     // Pulo
     private int jumpHeight = 7; // Define a força do pulo
     private float buttonPressingTime = 0.3f; // Limita o tempo do pulo
-    bool canJump; // Checa se o player está tocando o solo
+    [HideInInspector] public bool canJump; // Checa se o player está tocando o solo
     float jumpTime; // Contabiliza o tempo do pulo
     bool awayFromGround; // Checa se o player está pulando
     [SerializeField] Transform groundCheck;

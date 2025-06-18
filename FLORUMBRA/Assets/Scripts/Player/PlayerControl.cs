@@ -28,12 +28,13 @@ public class PlayerControl : MonoBehaviour
     public float arrowCharge = 0; // Dano do player, pode ser carregado ao segurar o botão para causar mais dano
 
     // Summons
-    public GameObject summonPoint;
     public GameObject wolf;
+    JumpControl onGround; // Só pode invocar se o player não estiver pulando
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        onGround = GetComponent<JumpControl>();
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate
@@ -140,11 +141,11 @@ public class PlayerControl : MonoBehaviour
     {
         mana += 0.05f * Time.deltaTime;
 
-        // Checa se o botão pressionado for o "Q" e tem mana o suficiente
-        if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2)
+        // Checa se o botão pressionado for o "Q", tem mana o suficiente e está no solo
+        if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump)
         {
             mana -= 0.2f;
-            wolf.transform.position = transform.position;
+            wolf.transform.position = new Vector2 (transform.position.x, 0);
             wolf.gameObject.SetActive(true);
         }
         manaBar.value = mana;
