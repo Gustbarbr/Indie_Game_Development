@@ -13,6 +13,8 @@ public class SkeletonControl : MonoBehaviour
     [SerializeField] float enemyPatrolSpeed = 1.5f;
     [SerializeField] float enemyChaseSpeed = 3;
 
+    [SerializeField] float defense = 0.25f;
+
     // Pontos de patrulha
     [SerializeField] Transform A;
     [SerializeField] Transform B;
@@ -80,21 +82,27 @@ public class SkeletonControl : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float amount)
+    {
+        hp.value -= amount;
+
+        if (hp.value <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Recebe dano da flecha, e se o hp for menor ou igual a 0, morre
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Arrow"))
         {
             // Causa dano na barra de vida, levando em conta o dano do player (o quanto o ataque foi carregado) dividido pela defesa (no caso multiplicar por numeros abaixo de 0 funciona como divisao)
-            hp.value -= player.arrowCharge * 0.25f;
-            // Destruir a flecha
-            Destroy(collision.gameObject);
-            // Resetar o dano do player
-            player.arrowCharge = 0;
+            float arrowDamage = player.arrowCharge * defense;
+            TakeDamage(arrowDamage);
 
-            if(hp.value <= 0){
-                Destroy(this.gameObject);
-            }
+            Destroy(collision.gameObject);
+            player.arrowCharge = 0;
         }
     }
 }
