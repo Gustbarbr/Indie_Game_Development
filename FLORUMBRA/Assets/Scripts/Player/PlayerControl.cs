@@ -145,7 +145,7 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump)
         {
             mana -= 0.2f;
-            wolf.transform.position = new Vector2 (transform.position.x, 0);
+            wolf.transform.position = transform.position;
             wolf.gameObject.SetActive(true);
         }
 

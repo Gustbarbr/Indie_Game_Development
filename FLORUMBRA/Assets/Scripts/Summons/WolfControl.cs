@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class WolfControl : MonoBehaviour
 {
@@ -8,9 +10,31 @@ public class WolfControl : MonoBehaviour
     public PlayerControl player;
     private float moveSpeed = 5;
     private float detectionRange = 15;
+    private Rigidbody2D rb;
+
+    // Ficar perto do player patrulhando
+    private Vector3 patrolTarget;
+    private bool movingRight = true;
+    private float maxDistanceFromPlayer = 10f;
+
+    private WolfAttack attack;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        attack = GetComponentInChildren<WolfAttack>();
+    }
 
     void Update()
     {
+        float distanceFromPlayer = Vector2.Distance(transform.position, player.transform.position);
+
+        if(distanceFromPlayer > maxDistanceFromPlayer)
+        {
+            transform.parent.gameObject.SetActive(false);
+            return;
+        }
+
         GameObject closestEnemy = ChaseEnemy();
 
         if(closestEnemy != null)
@@ -18,11 +42,33 @@ public class WolfControl : MonoBehaviour
             // Calcula a distancia entre o lobo e o inimigo e o normalized garante que a velocidade de perseguicao sera constante, mesmo com o inimigo se afastando
             Vector2 direction = (closestEnemy.transform.position - transform.position).normalized;
 
-            // Transforma o calculo de movimento (direction * moveSpeed * Time.deltaTime) em um vector 3, para que a velocidade possa ser adicionada ao objeto,
-            // pois transform.position eh um vetor
-            transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
+            // Retorna a informacao se na frente do lobo (a uma distancia de 0.1) há um objeto da layer "Barrier"
+            RaycastHit2D hitBarrier = Physics2D.Raycast(transform.position, direction, 0.5f, LayerMask.GetMask("Barrier"));
+
+            if(hitBarrier.collider == null)
+                // Atualiza a velocidade do lobo com base na direção e movespeed
+                rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+            else
+                rb.velocity = Vector2.zero;
+
+            // Mudar para onde o lobo olha
+            if (direction.x > 0)
+                transform.localScale = new Vector2(1, 1);
+            else if (direction.x < 0)
+                transform.localScale = new Vector2(-1, 1);
+        }
+
+        else
+        {
+            ProtectPlayer();
         }
         
+    }
+
+    void OnEnable()
+    {
+        transform.position = player.transform.position;
+        movingRight = true;
     }
 
     GameObject ChaseEnemy()
@@ -48,13 +94,46 @@ public class WolfControl : MonoBehaviour
                 minDistance = distanceToPlayer;
                 closest = enemy;
             }
-
-            else
-            {
-                Debug.Log("Ficarei próximo de ti!");
-            }
         }
 
         return closest;
+    }
+
+    // Quando não há inimigos por perto o lobo ficará rondando o player
+    void ProtectPlayer()
+    {
+        if (movingRight)
+        {
+            patrolTarget = player.transform.position + new Vector3(5, 0, 0);
+        }
+
+        else
+        {
+            patrolTarget = player.transform.position + new Vector3(-5, 0, 0);
+        }
+
+        // Calcula a direcao horizontal que o lobo deve seguir ate chegar ao ponto final de patrulha
+        Vector2 direction = new Vector2(patrolTarget.x - transform.position.x, 0).normalized;
+
+        // Faz com que o raycast fique um pouco a frente do lobo, para que ele nao detecte o proprio colisor
+        Vector2 origin = (Vector2)transform.position + direction * 0.1f;
+
+        // Checa se na frente do player (distancia de 0.5) há uma layer de nome "Barrier", o que retornaria hitBarrier diferente de null
+        RaycastHit2D hitBarrier = Physics2D.Raycast(origin, direction, 0.5f, LayerMask.GetMask("Barrier"));
+
+        if (hitBarrier.collider == null)
+            transform.position = Vector2.MoveTowards(transform.position, patrolTarget, moveSpeed * Time.deltaTime);
+
+        else
+            rb.velocity = Vector2.zero;
+
+        // Mudar para onde o lobo olha
+        if (direction.x > 0)
+            transform.localScale = new Vector2(1, 1);
+        else if (direction.x < 0)
+            transform.localScale = new Vector2(-1, 1);
+
+        if (Vector2.Distance(transform.position, patrolTarget) <= 0.1f)
+            movingRight = !movingRight;
     }
 }
