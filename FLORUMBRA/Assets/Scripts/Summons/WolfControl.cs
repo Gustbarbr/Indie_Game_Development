@@ -9,26 +9,24 @@ public class WolfControl : MonoBehaviour
 
     public PlayerControl player;
     private float moveSpeed = 5;
-    private float detectionRange = 15;
+    private float detectionRange = 10;
     private Rigidbody2D rb;
 
     // Ficar perto do player patrulhando
     private Vector3 patrolTarget;
     private bool movingRight = true;
-    private float maxDistanceFromPlayer = 10f;
-
-    private WolfAttack attack;
+    private float maxDistanceFromPlayer = 15;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        attack = GetComponentInChildren<WolfAttack>();
     }
 
     void Update()
     {
         float distanceFromPlayer = Vector2.Distance(transform.position, player.transform.position);
 
+        // O lobo é mandado para casa caso se afaste muito do player
         if(distanceFromPlayer > maxDistanceFromPlayer)
         {
             transform.parent.gameObject.SetActive(false);

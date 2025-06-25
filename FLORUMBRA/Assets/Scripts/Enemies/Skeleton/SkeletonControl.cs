@@ -67,17 +67,13 @@ public class SkeletonControl : MonoBehaviour
         else
         {
             if (player.transform.position.x > transform.position.x)
-            {
                 transform.localScale = new Vector2(1, 1);
-            }
             else if (player.transform.position.x < transform.position.x)
-            {
                 transform.localScale = new Vector2(-1, 1);
-            }
 
 
             // Evita movimentação indesejada, fazendo com que se mova somente quando longe do player
-            if (Vector2.Distance(transform.position, player.transform.position) > 0.05f)
+            if (Vector2.Distance(transform.position, player.transform.position) > 2)
             {
                 Vector2 direction = (player.transform.position - transform.position).normalized;
                 rb.velocity = new Vector2(direction.x * enemyChaseSpeed, rb.velocity.y);

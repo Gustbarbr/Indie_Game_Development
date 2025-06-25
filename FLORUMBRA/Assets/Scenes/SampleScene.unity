@@ -294,6 +294,7 @@ MonoBehaviour:
   A: {fileID: 2125197205}
   B: {fileID: 331892996}
   playerDetected: 0
+  wolfBleed: 0
 --- !u!1 &218126903
 GameObject:
   m_ObjectHideFlags: 0
@@ -2762,7 +2763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f112bd42e1bdbd449b1e513ca4f4cf98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  circleCollider: {fileID: 1125545641}
+  attackCooldown: 0
   damage: 0.2
 --- !u!58 &1125545641
 CircleCollider2D:

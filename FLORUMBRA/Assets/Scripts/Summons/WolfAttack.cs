@@ -4,28 +4,17 @@ using UnityEngine;
 
 public class WolfAttack : MonoBehaviour
 {
-    public CircleCollider2D circleCollider;
-    private float attackCooldown;
+    public float attackCooldown;
     [SerializeField] private float damage = 0.2f;
-
-    void Start()
-    {
-        circleCollider = GetComponent<CircleCollider2D>();
-    }
 
     void Update()
     {
         attackCooldown += Time.deltaTime;
-        if (attackCooldown >= 1.5)
-        {
-            circleCollider.enabled = true;
-            attackCooldown = 0;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy") && attackCooldown >= 1.5)
         {
             SkeletonControl skeleton = collision.GetComponent<SkeletonControl>();
 
@@ -38,8 +27,9 @@ public class WolfAttack : MonoBehaviour
             if (bleedingChance <= 35 && !skeleton.wolfBleed)
                 StartCoroutine(ApplyBleeding(skeleton));
 
-            circleCollider.enabled = false;
+            attackCooldown = 0;
         }
+
     }
 
     IEnumerator ApplyBleeding(SkeletonControl skeleton)
@@ -54,11 +44,12 @@ public class WolfAttack : MonoBehaviour
         // Enquanto a duracao total nao for atingida, o esqueleto toma dano equivalente a 40% do dano do lopo, a cada 0.5 segundos
         while (bleedElapsedTime < bleedDuration && skeleton != null)
         {
-            skeleton.TakeDamage(damage * 0.4f);
+            skeleton.TakeDamage(damage * 0.8f);
+            Debug.Log("While");
             yield return new WaitForSeconds(bleedInterval);
             bleedElapsedTime += bleedInterval;
         }
-
+        Debug.Log("While'nt");
         skeleton.wolfBleed = false;
     }
 }
