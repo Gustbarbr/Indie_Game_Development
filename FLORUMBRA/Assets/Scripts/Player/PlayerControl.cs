@@ -142,18 +142,18 @@ public class PlayerControl : MonoBehaviour
     {
 
         // Checa se o botão pressionado for o "Q", tem mana o suficiente, está no solo e não há companions invocados
-        if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && !isSummoned)
+        if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && isSummoned == false)
         {
             mana -= 0.2f;
             wolf.transform.position = transform.position;
             wolf.gameObject.SetActive(true);
-            isSummoned = !isSummoned;
+            isSummoned = true;
         }
 
-        else if (Input.GetKeyDown(KeyCode.Q) && isSummoned)
+        else if (Input.GetKeyDown(KeyCode.Q) && isSummoned == true)
         {
             wolf.gameObject.SetActive(false);
-            isSummoned = !isSummoned;
+            isSummoned = false;
         }
 
         // Se o lobo está invocado, a mana se regenera mais lentamente

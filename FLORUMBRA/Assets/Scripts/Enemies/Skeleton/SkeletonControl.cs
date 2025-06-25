@@ -24,6 +24,9 @@ public class SkeletonControl : MonoBehaviour
     public bool playerDetected = true;
     PlayerControl player;
 
+    // Habilidades dos summons
+    public bool wolfBleed = false;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
