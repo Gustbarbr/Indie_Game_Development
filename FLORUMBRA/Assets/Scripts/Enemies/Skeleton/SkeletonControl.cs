@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkeletonControl : MonoBehaviour
+public class SkeletonControl : MonoBehaviour, IApplyStatus
 {
     Rigidbody2D rb;
     public Slider hp;
@@ -26,6 +26,7 @@ public class SkeletonControl : MonoBehaviour
 
     // Habilidades dos summons
     public bool wolfBleed = false;
+    public bool WolfApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
 
     private void Start()
     {
@@ -103,5 +104,27 @@ public class SkeletonControl : MonoBehaviour
             Destroy(collision.gameObject);
             player.arrowCharge = 0;
         }
+    }
+
+    public void ApplyBleed(float bleedDamage, float bleedDuration, float bleedInterval)
+    {
+        // Se o inimigo não estiver sangrando, pode aplicar o sangramento
+        if (!WolfApplyBleed)
+            StartCoroutine(Bleeding(bleedDamage, bleedDuration, bleedInterval));
+    }
+
+    IEnumerator Bleeding(float bleedDamage, float bleedDuration, float bleedInterval)
+    {
+        WolfApplyBleed = true;
+        float elapsedBleedTime = 0;
+
+        // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
+        while (elapsedBleedTime < bleedDuration) {
+            TakeDamage(bleedDamage);
+            yield return new WaitForSeconds(bleedInterval);
+            elapsedBleedTime += bleedInterval;
+        }
+
+        WolfApplyBleed = false;
     }
 }

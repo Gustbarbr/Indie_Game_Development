@@ -14,42 +14,26 @@ public class WolfAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy") && attackCooldown >= 1.5)
+        if (collision.CompareTag("Enemy") && attackCooldown >= 2.5)
         {
-            SkeletonControl skeleton = collision.GetComponent<SkeletonControl>();
+            // Por conta da interface o lobo pode aplicar o sangramento em qualquer inimigo que tenha o ApplyStatus em seu codigo
+            IApplyStatus enemy = collision.GetComponent<IApplyStatus>();
 
-            // Aplica o dano ao entrar em contato
-            skeleton.TakeDamage(damage);
+            if(enemy!= null)
+            {
+                // Aplica o dano ao entrar em contato
+                enemy.TakeDamage(damage);
 
-            // 35% de chance de aplicar sangramento on hit
-            int bleedingChance = Random.Range(0, 100);
+                // 35% de chance de aplicar sangramento on hit
+                int bleedingChance = Random.Range(0, 100);
 
-            if (bleedingChance <= 35 && !skeleton.wolfBleed)
-                StartCoroutine(ApplyBleeding(skeleton));
+                if (bleedingChance <= 35 && !enemy.WolfApplyBleed)
+                    // Aplica 40% do dano do lobo, durante um total de 2.5 segundos e o efeito eh aplicado a cada 0.5 segundos
+                    enemy.ApplyBleed(damage * 0.4f, 2.5f, 0.5f);
 
-            attackCooldown = 0;
+                attackCooldown = 0;
+            }
         }
 
-    }
-
-    IEnumerator ApplyBleeding(SkeletonControl skeleton)
-    {
-        // Habilidade de sangramento do lobo
-        float bleedDuration = 2.5f; // Duracao
-        float bleedInterval = 0.5f; // Intervalo entre instancias de dano
-        float bleedElapsedTime = 0; // Tempo decorrido do sangramento
-
-        skeleton.wolfBleed = true;
-
-        // Enquanto a duracao total nao for atingida, o esqueleto toma dano equivalente a 40% do dano do lopo, a cada 0.5 segundos
-        while (bleedElapsedTime < bleedDuration && skeleton != null)
-        {
-            skeleton.TakeDamage(damage * 0.8f);
-            Debug.Log("While");
-            yield return new WaitForSeconds(bleedInterval);
-            bleedElapsedTime += bleedInterval;
-        }
-        Debug.Log("While'nt");
-        skeleton.wolfBleed = false;
     }
 }
