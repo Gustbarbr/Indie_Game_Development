@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,9 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
     public bool playerDetected = true;
     PlayerControl player;
 
+    // Armazenar cada summon para checar se estão mais próximos que o player
+    GameObject closestSummon;
+
     // Habilidades dos summons
     public bool wolfBleed = false;
     public bool WolfApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
@@ -47,6 +51,18 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
 
     void SkeletonMovement()
     {
+        TargetSummon();
+
+        bool summonIsActive = closestSummon != null && closestSummon.activeInHierarchy; // Essa variável só é verdadeira se existir um summon e ele estiver ativo
+        float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
+        float distanceToSummon = 0;
+
+        if (summonIsActive)
+            distanceToSummon = Vector2.Distance(transform.position, closestSummon.transform.position);
+        else
+            distanceToSummon = Mathf.Infinity;
+
+
         if (playerDetected == false)
         {
             // Faz com que o inimigo se move de sua posição atual até a posição alvo (A ou B) na velocidade definida
@@ -65,18 +81,33 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
                 transform.localScale = new Vector2(-1, 1);
         }
 
-        else
+        // Persegue o player caso ele esteja mais próximo que o summon
+        else if (distanceToPlayer < distanceToSummon)
         {
             if (player.transform.position.x > transform.position.x)
                 transform.localScale = new Vector2(1, 1);
             else if (player.transform.position.x < transform.position.x)
                 transform.localScale = new Vector2(-1, 1);
 
-
             // Evita movimentação indesejada, fazendo com que se mova somente quando longe do player
             if (Vector2.Distance(transform.position, player.transform.position) > 2)
             {
                 Vector2 direction = (player.transform.position - transform.position).normalized;
+                rb.velocity = new Vector2(direction.x * enemyChaseSpeed, rb.velocity.y);
+            }
+        }
+
+        else if(summonIsActive)
+        {
+            if (closestSummon.transform.position.x > transform.position.x)
+                transform.localScale = new Vector2(1, 1);
+            else if (closestSummon.transform.position.x < transform.position.x)
+                transform.localScale = new Vector2(-1, 1);
+
+            // Evita movimentação indesejada, fazendo com que se mova somente quando longe do player
+            if (Vector2.Distance(transform.position, closestSummon.transform.position) > 2)
+            {
+                Vector2 direction = (closestSummon.transform.position - transform.position).normalized;
                 rb.velocity = new Vector2(direction.x * enemyChaseSpeed, rb.velocity.y);
             }
         }
@@ -126,5 +157,38 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
         }
 
         WolfApplyBleed = false;
+    }
+
+    // Faz com que o summon ativo seja o único considerado como summon ativo,
+    // ou seja, mesmo ao trocar de summon ativo, o inimigo ainda o atacará
+    void TargetSummon()
+    {
+        // Busca todos os objetos que possuam a tag "Summon"
+        GameObject[] summons = GameObject.FindGameObjectsWithTag("Summon");
+
+        // Garante que nenhum summon está selecionado
+        closestSummon = null;
+
+        // A distancia inicial é o infinito, ou seja, qualquer distancia menor que essa será considerada como mais proxima
+        float minDistance = Mathf.Infinity;
+
+        // Percorra todos os summons
+        foreach (GameObject s in summons)
+        {
+            // Só considera o summon ativo
+            if (s.activeInHierarchy)
+            {
+                // Calcula a distancia entre o inimigo e o summon
+                float distance = Vector2.Distance(transform.position, s.transform.position);
+
+                // Se a distancia entre ambos for menor que infinito (sempre será),
+                // a nova distancia minima sera a distancia entre inimigo e summon e o summon mais proximo sera o ativo
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestSummon = s;
+                }
+            }
+        }
     }
 }
