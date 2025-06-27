@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkeletonControl : MonoBehaviour, IApplyStatus
+public class SkeletonControl : MonoBehaviour, IApplyBleed, IApplyPoison
 {
     Rigidbody2D rb;
     public Slider hp;
@@ -29,8 +29,11 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
     GameObject closestSummon;
 
     // Habilidades dos summons
-    public bool wolfBleed = false;
     public bool WolfApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
+
+    // Habilidades do player
+    public bool PlayerApplyPoison { get; set; }
+    public int poisonMeter = 0;
 
     private void Start()
     {
@@ -134,6 +137,8 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
 
             Destroy(collision.gameObject);
             player.arrowCharge = 0;
+
+            PoisonArrowEffect();
         }
     }
 
@@ -157,6 +162,43 @@ public class SkeletonControl : MonoBehaviour, IApplyStatus
         }
 
         WolfApplyBleed = false;
+    }
+
+    public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        // Se o inimigo não estiver sangrando, pode aplicar o sangramento
+        if (!PlayerApplyPoison)
+            StartCoroutine(Poison(poisonDamage, poisonDuration, poisonInterval));
+    }
+
+    IEnumerator Poison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        PlayerApplyPoison = true;
+        float elapsedPoisonTime = 0;
+
+        // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
+        while (elapsedPoisonTime < poisonDuration)
+        {
+            TakeDamage(poisonDamage);
+            yield return new WaitForSeconds(poisonInterval);
+            elapsedPoisonTime += poisonInterval;
+        }
+
+        PlayerApplyPoison = false;
+    }
+
+    private void PoisonArrowEffect()
+    {
+        if (player.poisonArrow == true && !PlayerApplyPoison)
+        {
+            poisonMeter += 50;
+
+            if (poisonMeter >= 100)
+            {
+                poisonMeter = 0;
+                ApplyPoison(0.2f, 5, 1);
+            }
+        }
     }
 
     // Faz com que o summon ativo seja o único considerado como summon ativo,

@@ -5,19 +5,22 @@ using UnityEngine;
 public class WolfAttack : MonoBehaviour
 {
     public float attackCooldown;
+    public CircleCollider2D attackCollider;
     [SerializeField] private float damage = 0.2f;
 
     void Update()
     {
         attackCooldown += Time.deltaTime;
+        if (attackCooldown >= 2)
+            attackCollider.enabled = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy") && attackCooldown >= 2.5)
+        if (collision.CompareTag("Enemy"))
         {
             // Por conta da interface o lobo pode aplicar o sangramento em qualquer inimigo que tenha o ApplyStatus em seu codigo
-            IApplyStatus enemy = collision.GetComponent<IApplyStatus>();
+            IApplyBleed enemy = collision.GetComponent<IApplyBleed>();
 
             if(enemy!= null)
             {
@@ -32,6 +35,7 @@ public class WolfAttack : MonoBehaviour
                     enemy.ApplyBleed(damage * 0.4f, 2.5f, 0.5f);
 
                 attackCooldown = 0;
+                attackCollider.enabled = false;
             }
         }
 

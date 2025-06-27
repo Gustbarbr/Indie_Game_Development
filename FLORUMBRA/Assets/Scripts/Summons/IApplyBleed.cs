@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IApplyStatus
+public interface IApplyBleed
 {
     // Essa eh uma interface, que por si so nao faz nada, mas permite criar codigos genericos e reutilizaveis.
     // Ela servira para cuidar dos status que os summons conseguem causar nos inimigos

@@ -32,6 +32,9 @@ public class PlayerControl : MonoBehaviour
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
     private bool isSummoned = false;
 
+    // Checa se o player possui as habilidades
+    [HideInInspector] public bool poisonArrow = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
