@@ -1,6 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonAttack : MonoBehaviour
+public class ZombieAttack : MonoBehaviour
 {
     public PlayerControl player;
     public CircleCollider2D circleCollider;

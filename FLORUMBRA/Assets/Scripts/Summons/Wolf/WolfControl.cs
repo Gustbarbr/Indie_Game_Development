@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UI;
 
 public class WolfControl : MonoBehaviour
 {
+    public Slider hp;
 
     public PlayerControl player;
     private float moveSpeed = 5;
@@ -43,7 +41,7 @@ public class WolfControl : MonoBehaviour
             // Retorna a informacao se na frente do lobo (a uma distancia de 0.1) há um objeto da layer "Barrier"
             RaycastHit2D hitBarrier = Physics2D.Raycast(transform.position, direction, 0.5f, LayerMask.GetMask("Barrier"));
 
-            if(hitBarrier.collider == null && Vector2.Distance(transform.position, closestEnemy.transform.position) >= 2)
+            if(hitBarrier.collider == null && Vector2.Distance(transform.position, closestEnemy.transform.position) >= 1.5f)
                 // Atualiza a velocidade do lobo com base na direção e movespeed
                 rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
             else

@@ -2,16 +2,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkeletonControl : MonoBehaviour, IDamageable
+public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
 {
     Rigidbody2D rb;
     public Slider hp;
 
     // Velocidade de movimento
-    private float enemyPatrolSpeed = 1.5f;
-    private float enemyChaseSpeed = 3;
+    private float enemyPatrolSpeed = 0.5f;
+    private float enemyChaseSpeed = 4.5f;
 
-    private float defense = 0.25f;
+    [SerializeField] float defense = 0.35f;
 
     // Pontos de patrulha
     [SerializeField] Transform A;
@@ -25,6 +25,13 @@ public class SkeletonControl : MonoBehaviour, IDamageable
     // Armazenar cada summon para checar se estão mais próximos que o player
     GameObject closestSummon;
 
+    // Habilidades dos summons
+    public bool WolfApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
+
+    // Habilidades do player
+    public bool PlayerApplyPoison { get; set; }
+    public int poisonMeter = 0;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -35,14 +42,14 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        SkeletonMovement();
+        ZombieMovement();
 
         // Se o player se afastar muito do inimigo, ele deixa de perseguir
-        if(Vector2.Distance(transform.position, player.transform.position) > 15)
+        if (Vector2.Distance(transform.position, player.transform.position) > 10)
             playerDetected = false;
     }
 
-    void SkeletonMovement()
+    void ZombieMovement()
     {
         TargetSummon();
 
@@ -58,7 +65,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
         if (playerDetected == false)
         {
-            SkeletonPatrol();
+            ZombiePatrol();
             return;
         }
 
@@ -73,7 +80,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
 
         // Evita movimentação indesejada se estiver muito perto
-        if(Vector2.Distance(transform.position, currentTarget.transform.position) > 2)
+        if (Vector2.Distance(transform.position, currentTarget.transform.position) > 2)
         {
             Vector2 direction = (currentTarget.transform.position - transform.position).normalized;
             rb.velocity = new Vector2(direction.x * enemyChaseSpeed, rb.velocity.y);
@@ -83,7 +90,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
             rb.velocity = Vector2.zero;
     }
 
-    private void SkeletonPatrol()
+    private void ZombiePatrol()
     {
         // Faz com que o inimigo se move de sua posição atual até a posição alvo (A ou B) na velocidade definida
         transform.position = Vector2.MoveTowards(transform.position, target.position, enemyPatrolSpeed * Time.deltaTime);
@@ -122,6 +129,68 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
             Destroy(collision.gameObject);
             player.arrowCharge = 0;
+
+            PoisonArrowEffect();
+        }
+    }
+
+    public void ApplyBleed(float bleedDamage, float bleedDuration, float bleedInterval)
+    {
+        // Se o inimigo não estiver sangrando, pode aplicar o sangramento
+        if (!WolfApplyBleed)
+            StartCoroutine(Bleeding(bleedDamage, bleedDuration, bleedInterval));
+    }
+
+    IEnumerator Bleeding(float bleedDamage, float bleedDuration, float bleedInterval)
+    {
+        WolfApplyBleed = true;
+        float elapsedBleedTime = 0;
+
+        // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
+        while (elapsedBleedTime < bleedDuration)
+        {
+            TakeDamage(bleedDamage);
+            yield return new WaitForSeconds(bleedInterval);
+            elapsedBleedTime += bleedInterval;
+        }
+
+        WolfApplyBleed = false;
+    }
+
+    public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        // Se o inimigo não estiver sangrando, pode aplicar o sangramento
+        if (!PlayerApplyPoison)
+            StartCoroutine(Poison(poisonDamage, poisonDuration, poisonInterval));
+    }
+
+    IEnumerator Poison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        PlayerApplyPoison = true;
+        float elapsedPoisonTime = 0;
+
+        // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
+        while (elapsedPoisonTime < poisonDuration)
+        {
+            TakeDamage(poisonDamage);
+            yield return new WaitForSeconds(poisonInterval);
+            elapsedPoisonTime += poisonInterval;
+        }
+
+        PlayerApplyPoison = false;
+    }
+
+    private void PoisonArrowEffect()
+    {
+        if (player.poisonArrow == true && !PlayerApplyPoison)
+        {
+            poisonMeter += 50;
+
+            if (poisonMeter >= 100)
+            {
+                poisonMeter = 0;
+                ApplyPoison(0.2f, 5, 1);
+            }
         }
     }
 

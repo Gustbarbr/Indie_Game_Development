@@ -15,24 +15,35 @@ public class WolfAttack : MonoBehaviour
             attackCollider.enabled = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            // Por conta da interface o lobo pode aplicar o sangramento em qualquer inimigo que tenha o ApplyStatus em seu codigo
-            IApplyBleed enemy = collision.GetComponent<IApplyBleed>();
 
-            if(enemy!= null)
+            IDamageable enemy = collision.GetComponent<IDamageable>();
+
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+                attackCooldown = 0;
+                attackCollider.enabled = false;
+            }
+                
+
+            // Por conta da interface o lobo pode aplicar o sangramento em qualquer inimigo que tenha o ApplyStatus em seu codigo
+            IApplyBleed enemyCanBleed = collision.GetComponent<IApplyBleed>();
+
+            if(enemyCanBleed != null)
             {
                 // Aplica o dano ao entrar em contato
-                enemy.TakeDamage(damage);
+                enemyCanBleed.TakeDamage(damage);
 
                 // 35% de chance de aplicar sangramento on hit
                 int bleedingChance = Random.Range(0, 100);
 
-                if (bleedingChance <= 35 && !enemy.WolfApplyBleed)
+                if (bleedingChance <= 35 && !enemyCanBleed.WolfApplyBleed)
                     // Aplica 40% do dano do lobo, durante um total de 2.5 segundos e o efeito eh aplicado a cada 0.5 segundos
-                    enemy.ApplyBleed(damage * 0.4f, 2.5f, 0.5f);
+                    enemyCanBleed.ApplyBleed(damage * 0.4f, 2.5f, 0.5f);
 
                 attackCooldown = 0;
                 attackCollider.enabled = false;
