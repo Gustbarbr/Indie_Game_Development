@@ -9,8 +9,9 @@ public class SkeletonDetectionRange : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Player"))
-        {
             skeleton.playerDetected = true;
-        }
+
+        if (collider.CompareTag("Summon"))
+            skeleton.summonDetected = true;
     }
 }

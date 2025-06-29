@@ -6,6 +6,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 {
     Rigidbody2D rb;
     public Slider hp;
+    PlayerControl player;
 
     // Velocidade de movimento
     private float enemyPatrolSpeed = 1.5f;
@@ -20,7 +21,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
     // Verificar se player foi detectado
     public bool playerDetected = false;
-    PlayerControl player;
+    public bool summonDetected = false;
 
     // Armazenar cada summon para checar se estão mais próximos que o player
     GameObject closestSummon;
@@ -36,10 +37,6 @@ public class SkeletonControl : MonoBehaviour, IDamageable
     private void FixedUpdate()
     {
         SkeletonMovement();
-
-        // Se o player se afastar muito do inimigo, ele deixa de perseguir
-        if(Vector2.Distance(transform.position, player.transform.position) > 15)
-            playerDetected = false;
     }
 
     void SkeletonMovement()
@@ -48,15 +45,16 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
         bool summonIsActive = closestSummon != null && closestSummon.activeInHierarchy; // Essa variável só é verdadeira se existir um summon e ele estiver ativo
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
-        float distanceToSummon = 0;
+        float distanceToSummon = summonIsActive ? Vector2.Distance(transform.position, closestSummon.transform.position) : Mathf.Infinity;
 
-        if (summonIsActive)
-            distanceToSummon = Vector2.Distance(transform.position, closestSummon.transform.position);
-        else
-            distanceToSummon = Mathf.Infinity;
+        // Se o player se afastar muito do inimigo, ele deixa de perseguir
+        if (Vector2.Distance(transform.position, player.transform.position) > 10)
+            playerDetected = false;
+        // Se o summon se afastar muito do inimigo, ele deixa de perseguir
+        if (summonIsActive && Vector2.Distance(transform.position, closestSummon.transform.position) > 10)
+            summonDetected = false;
 
-
-        if (playerDetected == false)
+        if (playerDetected == false && summonDetected == false)
         {
             SkeletonPatrol();
             return;

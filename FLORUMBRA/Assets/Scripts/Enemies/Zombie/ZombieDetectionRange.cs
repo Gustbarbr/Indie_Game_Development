@@ -9,8 +9,9 @@ public class ZombieDetectionRange : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Player"))
-        {
             zombie.playerDetected = true;
-        }
+
+        if (collider.CompareTag("Summon"))
+            zombie.summonDetected = true;
     }
 }

@@ -291,6 +291,7 @@ MonoBehaviour:
   A: {fileID: 2125197205}
   B: {fileID: 331892996}
   playerDetected: 0
+  summonDetected: 0
 --- !u!1 &157422270
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,7 +1707,7 @@ GameObject:
   - component: {fileID: 400887048}
   m_Layer: 0
   m_Name: Wolf Skin
-  m_TagString: Untagged
+  m_TagString: Summon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2470,7 +2471,7 @@ GameObject:
   - component: {fileID: 697084243}
   m_Layer: 0
   m_Name: Wolf Summon
-  m_TagString: Summon
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3137,6 +3138,7 @@ MonoBehaviour:
   A: {fileID: 1451868573}
   B: {fileID: 954365209}
   playerDetected: 0
+  summonDetected: 0
   poisonMeter: 0
 --- !u!1 &954365208
 GameObject:

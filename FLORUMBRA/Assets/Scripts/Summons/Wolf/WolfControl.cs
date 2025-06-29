@@ -7,13 +7,13 @@ public class WolfControl : MonoBehaviour
 
     public PlayerControl player;
     private float moveSpeed = 5;
-    private float detectionRange = 10;
+    private float detectionRange = 20;
     private Rigidbody2D rb;
 
     // Ficar perto do player patrulhando
     private Vector3 patrolTarget;
     private bool movingRight = true;
-    private float maxDistanceFromPlayer = 15;
+    private float maxDistanceFromPlayer = 25;
 
     void Start()
     {
