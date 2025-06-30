@@ -6,12 +6,12 @@ public class WolfAttack : MonoBehaviour
 {
     public float attackCooldown;
     public CircleCollider2D attackCollider;
-    [SerializeField] private float damage = 0.2f;
+    [SerializeField] private float damage = 0.15001f;
 
     void Update()
     {
         attackCooldown += Time.deltaTime;
-        if (attackCooldown >= 2)
+        if (attackCooldown >= 1.5)
             attackCollider.enabled = true;
     }
 

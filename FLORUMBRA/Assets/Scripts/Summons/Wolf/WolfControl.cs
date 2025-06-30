@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WolfControl : MonoBehaviour
+public class WolfControl : MonoBehaviour, IDamageable
 {
     public Slider hp;
 
@@ -131,5 +131,15 @@ public class WolfControl : MonoBehaviour
 
         if (Vector2.Distance(transform.position, patrolTarget) <= 0.1f)
             movingRight = !movingRight;
+    }
+
+    public void TakeDamage(float amount)
+    {
+        hp.value -= amount;
+
+        if (hp.value <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
