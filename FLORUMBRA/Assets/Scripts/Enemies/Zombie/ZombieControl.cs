@@ -30,7 +30,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
     public bool WolfApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
 
     // Habilidades do player
-    public bool PlayerApplyPoison { get; set; }
+    public bool HitApplyPoison { get; set; }
     public int poisonMeter = 0;
 
     private void Start()
@@ -157,14 +157,14 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
 
     public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
     {
-        // Se o inimigo não estiver sangrando, pode aplicar o sangramento
-        if (!PlayerApplyPoison)
+        // Se o inimigo não estiver envenenado, pode aplicar o envenenamento
+        if (!HitApplyPoison)
             StartCoroutine(Poison(poisonDamage, poisonDuration, poisonInterval));
     }
 
     IEnumerator Poison(float poisonDamage, float poisonDuration, float poisonInterval)
     {
-        PlayerApplyPoison = true;
+        HitApplyPoison = true;
         float elapsedPoisonTime = 0;
 
         // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
@@ -175,14 +175,14 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
             elapsedPoisonTime += poisonInterval;
         }
 
-        PlayerApplyPoison = false;
+        HitApplyPoison = false;
     }
 
     private void PoisonArrowEffect()
     {
-        if (player.poisonArrow == true && !PlayerApplyPoison)
+        if (player.poisonArrow == true && !HitApplyPoison)
         {
-            poisonMeter += 50;
+            poisonMeter += 20;
 
             if (poisonMeter >= 100)
             {

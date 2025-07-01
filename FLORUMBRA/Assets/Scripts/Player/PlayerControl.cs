@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerControl : MonoBehaviour
+public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 {
     Rigidbody2D rb;
 
@@ -34,6 +34,9 @@ public class PlayerControl : MonoBehaviour
 
     // Checa se o player possui as habilidades
     [HideInInspector] public bool poisonArrow = false;
+
+    // Efeitos dos inimigos
+    public bool HitApplyPoison { get; set; }
 
     void Start()
     {
@@ -143,7 +146,6 @@ public class PlayerControl : MonoBehaviour
 
     public void SummonCompanion()
     {
-
         // Checa se o botão pressionado for o "Q", tem mana o suficiente, está no solo e não há companions invocados
         if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && isSummoned == false)
         {
@@ -166,5 +168,35 @@ public class PlayerControl : MonoBehaviour
             mana += 0.05f * Time.deltaTime;
 
         manaBar.value = mana;
+    }
+
+    public void TakeDamage(float amount)
+    {
+        hpBar.value -= amount;
+
+        
+    }
+
+    public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        // Se o inimigo não estiver envenenado, pode aplicar o envenenamento
+        if (!HitApplyPoison)
+            StartCoroutine(Poison(poisonDamage, poisonDuration, poisonInterval));
+    }
+
+    IEnumerator Poison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        HitApplyPoison = true;
+        float elapsedPoisonTime = 0;
+
+        // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
+        while (elapsedPoisonTime < poisonDuration)
+        {
+            TakeDamage(poisonDamage);
+            yield return new WaitForSeconds(poisonInterval);
+            elapsedPoisonTime += poisonInterval;
+        }
+
+        HitApplyPoison = false;
     }
 }

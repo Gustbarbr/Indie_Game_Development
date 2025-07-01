@@ -8,6 +8,7 @@ public class ZombieAttack : MonoBehaviour
     public CircleCollider2D circleCollider;
     private float attackCooldown;
     private float damage = 0.15001f;
+    public int poisonMeter = 0;
 
     void Start()
     {
@@ -26,19 +27,22 @@ public class ZombieAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-        {
-            player.hpBar.value = player.hpBar.value - damage;
-            circleCollider.enabled = false;
-            attackCooldown = 0;
-        }
+        IApplyPoison poisonEnemy = collision.GetComponent<IApplyPoison>();
 
-        if (collision.CompareTag("Summon"))
+        if (poisonEnemy != null)
         {
-            IDamageable summon = collision.GetComponent<IDamageable>();
-            summon.TakeDamage(damage);
-            circleCollider.enabled = false;
+            poisonEnemy.TakeDamage(damage);
+
+            poisonMeter += 40;
+
+            if (poisonMeter >= 100)
+            {
+                poisonMeter = 0;
+                poisonEnemy.ApplyPoison(0.2f, 5, 1);
+            }
+
             attackCooldown = 0;
+            circleCollider.enabled = false;
         }
     }
 }

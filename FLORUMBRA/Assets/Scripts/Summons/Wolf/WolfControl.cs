@@ -1,7 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WolfControl : MonoBehaviour, IDamageable
+public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
 {
     public Slider hp;
 
@@ -14,6 +16,9 @@ public class WolfControl : MonoBehaviour, IDamageable
     private Vector3 patrolTarget;
     private bool movingRight = true;
     private float maxDistanceFromPlayer = 25;
+
+    // Efeitos dos inimigos
+    public bool HitApplyPoison { get; set; }
 
     void Start()
     {
@@ -139,7 +144,30 @@ public class WolfControl : MonoBehaviour, IDamageable
 
         if (hp.value <= 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
+    }
+
+    public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        // Se o inimigo não estiver envenenado, pode aplicar o envenenamento
+        if (!HitApplyPoison)
+            StartCoroutine(Poison(poisonDamage, poisonDuration, poisonInterval));
+    }
+
+    IEnumerator Poison(float poisonDamage, float poisonDuration, float poisonInterval)
+    {
+        HitApplyPoison = true;
+        float elapsedPoisonTime = 0;
+
+        // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
+        while (elapsedPoisonTime < poisonDuration)
+        {
+            TakeDamage(poisonDamage);
+            yield return new WaitForSeconds(poisonInterval);
+            elapsedPoisonTime += poisonInterval;
+        }
+
+        HitApplyPoison = false;
     }
 }

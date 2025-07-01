@@ -23,7 +23,8 @@ public class SkeletonAttack : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            player.hpBar.value = player.hpBar.value - damage;
+            IDamageable player = collision.GetComponent<IDamageable>();
+            player.TakeDamage(damage);
             circleCollider.enabled = false;
             attackCooldown = 0;
         }
