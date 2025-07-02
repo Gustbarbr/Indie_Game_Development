@@ -29,8 +29,13 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
     // Summons
     public GameObject wolf;
+    WolfControl childrenWolf;
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
     private bool isSummoned = false;
+
+    // Ressucitar summons
+    public float ressurrectionCooldown = 0;
+    public bool ressurrecting = false;
 
     // Checa se o player possui as habilidades
     [HideInInspector] public bool poisonArrow = false;
@@ -42,6 +47,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     {
         rb = GetComponent<Rigidbody2D>();
         onGround = GetComponent<JumpControl>();
+
+        childrenWolf = wolf.GetComponentInChildren<WolfControl>();
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate
@@ -55,6 +62,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     {
         ShootArrow();
         SummonCompanion();
+        RessurrectCompanion();
     }
 
     public void PlayerMovement()
@@ -146,28 +154,53 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
     public void SummonCompanion()
     {
-        // Checa se o botão pressionado for o "Q", tem mana o suficiente, está no solo e não há companions invocados
-        if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && isSummoned == false)
+        if (ressurrecting == false)
         {
-            mana -= 0.2f;
-            wolf.transform.position = transform.position;
-            wolf.gameObject.SetActive(true);
-            isSummoned = true;
-        }
+            // Checa se o botão pressionado for o "Q", tem mana o suficiente, está no solo e não há companions invocados
+            if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && isSummoned == false)
+            {
+                mana -= 0.2f;
+                wolf.transform.position = transform.position;
+                wolf.gameObject.SetActive(true);
+                isSummoned = true;
+            }
 
-        else if (Input.GetKeyDown(KeyCode.Q) && isSummoned == true)
-        {
-            wolf.gameObject.SetActive(false);
-            isSummoned = false;
+            else if (Input.GetKeyDown(KeyCode.Q) && isSummoned == true)
+            {
+                wolf.gameObject.SetActive(false);
+                isSummoned = false;
+            }
+
         }
 
         // Se o lobo está invocado, a mana se regenera mais lentamente
-        if(isSummoned == true)
+        if (isSummoned == true)
             mana += 0.02f * Time.deltaTime;
         else
             mana += 0.05f * Time.deltaTime;
 
         manaBar.value = mana;
+
+    }
+
+    public void RessurrectCompanion()
+    {
+        if(childrenWolf.hp.value <= 0)
+        {
+            ressurrecting = true;
+            isSummoned = false;
+        }
+            
+
+        if (ressurrecting)
+            ressurrectionCooldown += Time.deltaTime;
+
+        if (ressurrectionCooldown >= 10)
+        {
+            ressurrecting = false;
+            childrenWolf.hp.value = 1;
+            ressurrectionCooldown = 0;
+        }
     }
 
     public void TakeDamage(float amount)

@@ -7,6 +7,9 @@ public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
 {
     public Slider hp;
 
+    // Tempo de recarga para o lobo ressucitar
+    public GameObject wolfParent;
+
     public PlayerControl player;
     private float moveSpeed = 5;
     private float detectionRange = 20;
@@ -63,7 +66,7 @@ public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
         {
             ProtectPlayer();
         }
-        
+             
     }
 
     void OnEnable()
@@ -143,9 +146,7 @@ public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
         hp.value -= amount;
 
         if (hp.value <= 0)
-        {
-            gameObject.SetActive(false);
-        }
+            wolfParent.gameObject.SetActive(false);
     }
 
     public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
