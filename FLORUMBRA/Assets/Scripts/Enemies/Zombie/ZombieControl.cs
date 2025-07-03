@@ -187,7 +187,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
             if (poisonMeter >= 100)
             {
                 poisonMeter = 0;
-                ApplyPoison(0.2f, 5, 1);
+                ApplyPoison(20, 5, 1);
             }
         }
     }

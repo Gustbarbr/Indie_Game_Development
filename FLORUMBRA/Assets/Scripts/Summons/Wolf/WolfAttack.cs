@@ -6,7 +6,7 @@ public class WolfAttack : MonoBehaviour
 {
     public float attackCooldown;
     public CircleCollider2D attackCollider;
-    [SerializeField] private float damage = 0.15001f;
+    [SerializeField] private int damage = 15;
 
     void Update()
     {

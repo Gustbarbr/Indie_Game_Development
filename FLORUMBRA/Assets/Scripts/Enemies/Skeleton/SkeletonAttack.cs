@@ -5,7 +5,7 @@ public class SkeletonAttack : MonoBehaviour
     public PlayerControl player;
     public CircleCollider2D circleCollider;
     private float attackCooldown;
-    private float damage = 0.20001f;
+    private int damage = 20;
 
     void Start()
     {

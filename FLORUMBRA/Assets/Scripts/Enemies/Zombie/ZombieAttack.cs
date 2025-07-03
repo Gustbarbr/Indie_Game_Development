@@ -7,7 +7,7 @@ public class ZombieAttack : MonoBehaviour
     public PlayerControl player;
     public CircleCollider2D circleCollider;
     private float attackCooldown;
-    private float damage = 0.15001f;
+    private int damage = 15;
     public int poisonMeter = 0;
 
     void Start()

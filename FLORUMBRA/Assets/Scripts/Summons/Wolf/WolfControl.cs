@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
+public class WolfControl : MonoBehaviour, IApplyPoison, IDamageable, ISummon
 {
     public Slider hp;
 
@@ -146,7 +146,10 @@ public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
         hp.value -= amount;
 
         if (hp.value <= 0)
+        {
             wolfParent.gameObject.SetActive(false);
+            player.isSummoned = false;
+        }
     }
 
     public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
@@ -170,5 +173,32 @@ public class WolfControl : MonoBehaviour, IApplyPoison,IDamageable
         }
 
         HitApplyPoison = false;
+    }
+
+    // Parte referente ao controle genérico de summon (ISummon)
+    public void OnSummon(Vector3 position)
+    {
+        wolfParent.transform.position = position;
+        wolfParent.gameObject.SetActive(true);
+    }
+
+    public void OnDismiss()
+    {
+        wolfParent.gameObject.SetActive(false);
+    }
+
+    public void OnRessurrect()
+    {
+        hp.value = 150;
+    }
+
+    public bool IsAlive()
+    {
+        return hp.value > 0;
+    }
+
+    public Slider GetHp()
+    {
+        return hp;
     }
 }
