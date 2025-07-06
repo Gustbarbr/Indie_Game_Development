@@ -7,7 +7,7 @@ public class WolfControl : MonoBehaviour, IApplyPoison, IDamageable, ISummon
 {
     public Slider hp;
 
-    // Tempo de recarga para o lobo ressucitar
+    // Summonar o lobo
     public GameObject wolfParent;
 
     public PlayerControl player;

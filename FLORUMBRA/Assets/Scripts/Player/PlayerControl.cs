@@ -206,6 +206,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             currentSummonIndex = (currentSummonIndex + 1) % summons.Count;
             // Acessa o objeto da lista que possui a interface ISummon
             currentSummon = summons[currentSummonIndex].GetComponentInChildren<ISummon>();
+            Debug.Log("Summon atual: " + currentSummon);
         }
     }
 
