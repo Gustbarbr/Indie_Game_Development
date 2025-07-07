@@ -9,10 +9,14 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
     public GameObject ratParent;
 
     Rigidbody2D rb;
+    GameObject closestEnemy;
 
     public PlayerControl player;
     private float moveSpeed = 5;
     private float detectionRange = 20;
+
+    private int damage = 5;
+    public int poisonMeter = 0;
 
     void Start()
     {
@@ -23,7 +27,7 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
     {
         float distanceFromPlayer = Vector2.Distance(transform.position, player.transform.position);
 
-        GameObject closestEnemy = ChaseEnemy();
+        closestEnemy = ChaseEnemy();
 
         if (closestEnemy != null)
         {
@@ -37,7 +41,7 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
                 // Atualiza a velocidade do lobo com base na direção e movespeed
                 rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
             else
-                rb.velocity = Vector2.zero;
+                Attack();
 
             // Mudar para onde o lobo olha
             if (direction.x > 0)
@@ -46,6 +50,27 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
                 transform.localScale = new Vector2(-1, 1);
         }
 
+    }
+
+    void Attack()
+    {
+        IApplyPoison poisonEnemy = closestEnemy.GetComponent<IApplyPoison>();
+
+        if (poisonEnemy != null)
+        {
+            poisonEnemy.TakeDamage(damage);
+
+            poisonMeter += 100;
+
+            if (poisonMeter >= 100)
+            {
+                poisonMeter = 0;
+                poisonEnemy.ApplyPoison(15, 4, 1);
+            }
+        }
+        player.isSummoned = false;
+        player.ressurrecting = true;
+        ratParent.gameObject.SetActive(false);
     }
 
     GameObject ChaseEnemy()
@@ -81,7 +106,10 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
     // Parte referente ao controle genérico de summon (ISummon)
     public void OnSummon(Vector3 position)
     {
-        ratParent.transform.position = new Vector3(player.transform.position.x, -0.8f);
+        ratParent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 0.8f);
+        // Garante que o rato esteja centralizado em seu objeto pai
+        transform.localPosition = Vector3.zero;
+        player.mana -= 15f;
         ratParent.gameObject.SetActive(true);
     }
 

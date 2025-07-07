@@ -38,7 +38,7 @@ public class ZombieAttack : MonoBehaviour
             if (poisonMeter >= 100)
             {
                 poisonMeter = 0;
-                poisonEnemy.ApplyPoison(0.2f, 5, 1);
+                poisonEnemy.ApplyPoison(20, 5, 1);
             }
 
             attackCooldown = 0;

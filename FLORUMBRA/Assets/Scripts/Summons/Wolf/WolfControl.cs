@@ -179,6 +179,7 @@ public class WolfControl : MonoBehaviour, IApplyPoison, IDamageable, ISummon
     public void OnSummon(Vector3 position)
     {
         wolfParent.transform.position = position;
+        player.mana -= 35f;
         wolfParent.gameObject.SetActive(true);
     }
 

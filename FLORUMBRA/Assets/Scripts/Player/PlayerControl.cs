@@ -17,7 +17,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public Slider hpBar;
     public Slider manaBar;
     public Slider staminaBar;
-    private float mana = 100f;
+    [HideInInspector] public float mana = 100f;
     private float stamina = 100f;
 
     [Header("ATK")]
@@ -162,7 +162,6 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             // Checa se o botão pressionado for o "Q", tem mana o suficiente, está no solo e não há companions invocados
             if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && isSummoned == false)
             {
-                mana -= 20f;
                 currentSummon.OnSummon(transform.position);
                 isSummoned = true;
             }
@@ -176,7 +175,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
 
         // Se o lobo está invocado, a mana se regenera mais lentamente
-        mana += (isSummoned ? 2f : 5f) * Time.deltaTime;
+        mana += (isSummoned ? 1f : 2.5f) * Time.deltaTime;
 
         manaBar.value = mana;
 
@@ -190,7 +189,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         if (ressurrecting)
             ressurrectionCooldown += Time.deltaTime;
 
-        if (ressurrectionCooldown >= 10)
+        if (ressurrectionCooldown >= 5)
         {
             currentSummon.OnRessurrect();
             ressurrecting = false;
