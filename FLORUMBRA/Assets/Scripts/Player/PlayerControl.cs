@@ -159,18 +159,12 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     {
         if (ressurrecting == false)
         {
-            // Checa se o botão pressionado for o "Q", tem mana o suficiente, está no solo e não há companions invocados
-            if (Input.GetKeyDown(KeyCode.Q) && manaBar.value >= 0.2 && onGround.canJump && isSummoned == false)
-            {
+            // Checa se o botão pressionado for o "Q", está no solo e não há companions invocados
+            if (Input.GetKeyDown(KeyCode.Q) && onGround.canJump && isSummoned == false)
                 currentSummon.OnSummon(transform.position);
-                isSummoned = true;
-            }
 
             else if (Input.GetKeyDown(KeyCode.Q) && isSummoned == true)
-            {
                 currentSummon.OnDismiss();
-                isSummoned = false;
-            }
 
         }
 

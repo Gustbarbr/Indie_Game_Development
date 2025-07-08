@@ -106,15 +106,20 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
     // Parte referente ao controle genérico de summon (ISummon)
     public void OnSummon(Vector3 position)
     {
-        ratParent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 0.8f);
-        // Garante que o rato esteja centralizado em seu objeto pai
-        transform.localPosition = Vector3.zero;
-        player.mana -= 15f;
-        ratParent.gameObject.SetActive(true);
+        if(player.mana >= 15)
+        {
+            ratParent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 0.8f);
+            // Garante que o rato esteja centralizado em seu objeto pai
+            transform.localPosition = Vector3.zero;
+            player.mana -= 15f;
+            player.isSummoned = true;
+            ratParent.gameObject.SetActive(true);
+        }
     }
 
     public void OnDismiss()
     {
+        player.isSummoned = false;
         ratParent.gameObject.SetActive(false);
     }
 

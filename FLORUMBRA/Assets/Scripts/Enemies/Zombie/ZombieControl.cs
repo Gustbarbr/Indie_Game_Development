@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
+public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageable
 {
     Rigidbody2D rb;
     public Slider hp;
@@ -12,7 +12,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison
     private float enemyPatrolSpeed = 0.5f;
     private float enemyChaseSpeed = 4.5f;
 
-    [SerializeField] float defense = 0.35f;
+    private float defense = 0.35f;
 
     // Pontos de patrulha
     [SerializeField] Transform A;

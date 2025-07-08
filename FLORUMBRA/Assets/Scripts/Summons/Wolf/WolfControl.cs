@@ -178,13 +178,18 @@ public class WolfControl : MonoBehaviour, IApplyPoison, IDamageable, ISummon
     // Parte referente ao controle genérico de summon (ISummon)
     public void OnSummon(Vector3 position)
     {
-        wolfParent.transform.position = position;
-        player.mana -= 35f;
-        wolfParent.gameObject.SetActive(true);
+        if(player.mana >= 35)
+        {
+            wolfParent.transform.position = position;
+            player.mana -= 35f;
+            player.isSummoned = true;
+            wolfParent.gameObject.SetActive(true);
+        }
     }
 
     public void OnDismiss()
     {
+        player.isSummoned = false;
         wolfParent.gameObject.SetActive(false);
     }
 
