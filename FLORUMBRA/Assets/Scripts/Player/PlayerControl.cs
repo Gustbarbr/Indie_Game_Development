@@ -17,6 +17,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public Slider hpBar;
     public Slider manaBar;
     public Slider staminaBar;
+    public Slider xpBar;
+    [HideInInspector] public float hp = 100f;
     [HideInInspector] public float mana = 100f;
     [HideInInspector] public float stamina = 100f;
 
@@ -41,6 +43,10 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public bool ressurrecting = false; // Checa se está ressucitando ou nao
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
 
+    [Header("Controle de XP e níveis")]
+    [HideInInspector] public int level = 0;
+    [HideInInspector] public int xp = 0;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,6 +54,14 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
         if(summons.Count > 0)
             currentSummon = summons[0].GetComponentInChildren<ISummon>();
+
+        hp = 100f + 50 * level;
+        mana = 100f + 25 * level;
+        stamina = 100f + 10 * level;
+
+        hpBar.maxValue = hp;
+        manaBar.maxValue = mana;
+        staminaBar.maxValue = stamina;
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate
@@ -63,6 +77,12 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         SummonCompanion();
         RessurrectCompanion();
         SwitchSummon();
+        if(level <= 20)
+            LevelUp();
+        hpBar.value = hp;
+        staminaBar.value = stamina;
+        manaBar.value = mana;
+        xpBar.value = xp;
     }
 
     public void PlayerMovement()
@@ -110,9 +130,6 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
                 stamina += 10f * Time.deltaTime;
             if (stamina > 100) stamina = 100;
         }
-
-        // Atualiza a barra de stamina
-        staminaBar.value = stamina;
 
         rb.velocity = new Vector2(horizontalMovement * velocity, rb.velocity.y);
     }
@@ -170,9 +187,6 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
         // Se o lobo está invocado, a mana se regenera mais lentamente
         mana += (isSummoned ? 1f : 2.5f) * Time.deltaTime;
-
-        manaBar.value = mana;
-
     }
 
     public void RessurrectCompanion()
@@ -205,9 +219,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
     public void TakeDamage(float amount)
     {
-        hpBar.value -= amount;
-
-        
+        hp -= amount;
     }
 
     public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
@@ -231,5 +243,15 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
 
         HitApplyPoison = false;
+    }
+
+    private void LevelUp()
+    {
+        if(xp >= xpBar.maxValue)
+        {
+            level += 1;
+            xp = 0;
+            xpBar.maxValue += xpBar.maxValue * 2;
+        }
     }
 }

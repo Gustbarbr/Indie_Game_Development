@@ -4411,7 +4411,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -8.931002, y: 0.0038337708}
+  m_Offset: {x: -8.503624, y: 0.0038337708}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -4422,7 +4422,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.116288185, y: 5.9751024}
+  m_Size: {x: 1.0931511, y: 5.9751024}
   m_EdgeRadius: 0
 --- !u!1 &1263789616
 GameObject:
@@ -6335,6 +6335,8 @@ MonoBehaviour:
   hpBar: {fileID: 492970517}
   manaBar: {fileID: 1771892999}
   staminaBar: {fileID: 1622456646}
+  xpBar: {fileID: 2130293780}
+  hp: 100
   mana: 100
   stamina: 100
   arrowPrefab: {fileID: 7235316080921566783, guid: c1dd51323c25f574c9c7a20d2df54860, type: 3}
@@ -6347,6 +6349,8 @@ MonoBehaviour:
   isSummoned: 0
   ressurrectionCooldown: 0
   ressurrecting: 0
+  level: 0
+  xp: 0
 --- !u!50 &1913572764
 Rigidbody2D:
   serializedVersion: 4
@@ -6875,7 +6879,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 1
-  m_Value: 100
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
