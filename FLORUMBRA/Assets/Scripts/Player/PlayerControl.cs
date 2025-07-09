@@ -18,7 +18,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public Slider manaBar;
     public Slider staminaBar;
     [HideInInspector] public float mana = 100f;
-    private float stamina = 100f;
+    [HideInInspector] public float stamina = 100f;
 
     [Header("ATK")]
     public GameObject arrowPrefab;
@@ -97,7 +97,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         {
             velocity = baseSpeed - sprintVelocity;
             if (!Input.GetButton("Fire1"))
-                stamina += 10f * Time.deltaTime;
+                stamina += 5f * Time.deltaTime;
             // Se a stamina chegar a 30% pode voltar a correr
             if (stamina >= 30f) exhaustion = false;
         }
@@ -107,7 +107,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         {
             velocity = baseSpeed;
             if (!Input.GetButton("Fire1"))
-                stamina += 20f * Time.deltaTime;
+                stamina += 10f * Time.deltaTime;
             if (stamina > 100) stamina = 100;
         }
 
@@ -136,7 +136,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
 
         // Só pode atacar se o botão do mouse for solto, estiver fora do tempo de recarga e tiver stamina
-        else if ((Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0) || staminaBar.value <=0)
+        else if ((Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0))
         {
             // Determina a direção da flecha com base na escala do jogador, ou seja, para onde está olhando
             float direction = transform.localScale.x;

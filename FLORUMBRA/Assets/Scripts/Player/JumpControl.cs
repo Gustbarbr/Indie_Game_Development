@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class JumpControl : MonoBehaviour
 {
-
     Rigidbody2D rb;
 
     // Pulo
