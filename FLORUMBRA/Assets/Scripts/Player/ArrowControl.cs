@@ -10,7 +10,7 @@ public class ArrowControl : MonoBehaviour
 
     void Start()
     {
-        // Utiliza a velocidade e direção no movimento
+        // Utiliza a velocidade e direcao no movimento
         GetComponent<Rigidbody2D>().velocity = new Vector2(arrowDirection * arrowVelocity, 0);
     }
 
@@ -21,16 +21,22 @@ public class ArrowControl : MonoBehaviour
         // Destrói a flecha se ela ficar 3 segundos ou mais no ar
         if(lifeTime >= 3)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
     public void SetDirection(float dir)
     {
-        // Armazena a direção que a flecha será disparada
+        // Armazena a direcao que a flecha sera disparada
         arrowDirection = dir;
 
-        // Muda visualmente a direção da flecha
+        // Muda visualmente a direcao da flecha
         transform.localScale = new Vector3(arrowDirection, 1, 1);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Wall"))
+            Destroy(gameObject);
     }
 }

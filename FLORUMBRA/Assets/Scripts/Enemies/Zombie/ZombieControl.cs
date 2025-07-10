@@ -112,7 +112,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
 
         if (hp.value <= 0)
         {
-            player.xp += 35 + 15 * player.level;
+            player.xp += 35 + 5 * player.level;
             Destroy(gameObject);
         }
     }
@@ -123,7 +123,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
         if (collision.CompareTag("Arrow"))
         {
             // Causa dano na barra de vida, levando em conta o dano do player (o quanto o ataque foi carregado) dividido pela defesa (no caso multiplicar por numeros abaixo de 0 funciona como divisao)
-            float arrowDamage = (player.arrowCharge + player.level * 5) * defense;
+            float arrowDamage = (player.arrowCharge + player.level * 20) * defense;
             TakeDamage(arrowDamage);
             Destroy(collision.gameObject);
             player.arrowCharge = 0;

@@ -47,6 +47,9 @@ public class SkeletonControl : MonoBehaviour, IDamageable
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
         float distanceToSummon = summonIsActive ? Vector2.Distance(transform.position, closestSummon.transform.position) : Mathf.Infinity;
 
+        // Se a distância até o summon for menor que a distância até o player, o alvo será o summon, senão será o player
+        GameObject currentTarget = (distanceToSummon < distanceToPlayer) ? closestSummon : player.gameObject;
+
         // Se o player se afastar muito do inimigo, ele deixa de perseguir
         if (Vector2.Distance(transform.position, player.transform.position) > 10)
             playerDetected = false;
@@ -59,9 +62,6 @@ public class SkeletonControl : MonoBehaviour, IDamageable
             SkeletonPatrol();
             return;
         }
-
-        // Se a distância até o summon for menor que a distância até o player, o alvo será o summon, senão será o player
-        GameObject currentTarget = (distanceToSummon < distanceToPlayer) ? closestSummon : player.gameObject;
 
         // Vira para o alvo
         if (currentTarget.transform.position.x > transform.position.x)
@@ -105,7 +105,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
         if (hp.value <= 0)
         {
-            player.xp += 10 + 5 * player.level;
+            player.xp += 10 + 2 * player.level;
             Destroy(gameObject);
         }
     }
@@ -116,7 +116,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
         if (collision.CompareTag("Arrow"))
         {
             // Causa dano na barra de vida, levando em conta o dano do player (o quanto o ataque foi carregado) dividido pela defesa (no caso multiplicar por numeros abaixo de 0 funciona como divisao)
-            float arrowDamage = (player.arrowCharge + player.level * 5) * defense;
+            float arrowDamage = (player.arrowCharge + player.level * 20) * defense;
             TakeDamage(arrowDamage);
 
             Destroy(collision.gameObject);

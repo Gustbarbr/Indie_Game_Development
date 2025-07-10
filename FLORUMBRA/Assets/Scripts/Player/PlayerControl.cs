@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,13 +40,14 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     private int currentSummonIndex = 0; // Indice da lista de summons
     private ISummon currentSummon; // Interface ISummon
     public bool isSummoned = false; // Verifica se o companion está invocado
-    public float ressurrectionCooldown = 0; // Tempo para ressucitar
+    public float ressurrectionCooldown = 10; // Tempo para ressucitar
     public bool ressurrecting = false; // Checa se está ressucitando ou nao
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
 
     [Header("Controle de XP e níveis")]
-    [HideInInspector] public int level = 0;
-    [HideInInspector] public int xp = 0;
+    public int level = 0;
+    public int xp = 0;
+    public TextMeshProUGUI levelText;
 
     void Start()
     {
@@ -62,6 +64,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         hpBar.maxValue = hp;
         manaBar.maxValue = mana;
         staminaBar.maxValue = stamina;
+        levelText.SetText(level.ToString());
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate
@@ -128,7 +131,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             velocity = baseSpeed;
             if (!Input.GetButton("Fire1"))
                 stamina += 10f * Time.deltaTime;
-            if (stamina > 100) stamina = 100;
+            if (stamina > staminaBar.maxValue) stamina = staminaBar.maxValue;
         }
 
         rb.velocity = new Vector2(horizontalMovement * velocity, rb.velocity.y);
@@ -182,11 +185,11 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
             else if (Input.GetKeyDown(KeyCode.Q) && isSummoned == true)
                 currentSummon.OnDismiss();
-
         }
 
         // Se o lobo está invocado, a mana se regenera mais lentamente
-        mana += (isSummoned ? 1f : 2.5f) * Time.deltaTime;
+        if(mana < manaBar.maxValue)
+            mana += (isSummoned ? 1f : 2.5f) * Time.deltaTime;
     }
 
     public void RessurrectCompanion()
@@ -195,13 +198,13 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             ressurrecting = true;
             
         if (ressurrecting)
-            ressurrectionCooldown += Time.deltaTime;
+            ressurrectionCooldown -= Time.deltaTime;
 
-        if (ressurrectionCooldown >= 5)
+        if (ressurrectionCooldown <= 0)
         {
             currentSummon.OnRessurrect();
             ressurrecting = false;
-            ressurrectionCooldown = 0;
+            ressurrectionCooldown = 10 - level * 0.5f;
         }
     }
 
@@ -252,6 +255,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             level += 1;
             xp = 0;
             xpBar.maxValue += xpBar.maxValue * 2;
+            levelText.SetText(level.ToString());
+            ressurrectionCooldown = 10 - level * 0.5f;
         }
     }
 }
