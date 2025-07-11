@@ -8,7 +8,7 @@ public interface IApplyBleed
     // Ela servira para cuidar dos status que os summons conseguem causar nos inimigos
     void TakeDamage(float damage);
     // "get;set;" diz que a propriedade pode ser lida (get) e modificada (set)
-    bool WolfApplyBleed { get; set; }
+    bool SummonApplyBleed { get; set; }
     // Aumentar escalabilidade do sangramento, para que mesmo quando o lobo for mandado para casa, o inimigo ainda sangre
     void ApplyBleed(float damage, float duration, float interval);
 }

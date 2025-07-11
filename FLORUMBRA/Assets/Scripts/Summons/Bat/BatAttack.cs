@@ -2,17 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WolfAttack : MonoBehaviour
+public class BatAttack : MonoBehaviour
 {
+    BatControl bat;
+    PlayerControl player;
+
     public float attackCooldown;
     public CircleCollider2D attackCollider;
-    [SerializeField] private int damage = 20;
+    [SerializeField] private int damage = 10;
+    public int numberOfAttacks = 5;
+
+    void Start()
+    {
+        bat = GetComponentInParent<BatControl>();
+        player = FindObjectOfType<PlayerControl>();
+    }
 
     void Update()
     {
         attackCooldown += Time.deltaTime;
         if (attackCooldown >= 1.5)
             attackCollider.enabled = true;
+
+        if (numberOfAttacks <= 0)
+        {
+            bat.batParent.gameObject.SetActive(false);
+            player.isSummoned = false;
+        }
+            
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -26,24 +43,20 @@ public class WolfAttack : MonoBehaviour
             {
                 enemy.TakeDamage(damage);
                 attackCooldown = 0;
+                numberOfAttacks -= 1;
                 attackCollider.enabled = false;
             }
-                
 
-            // Por conta da interface o lobo pode aplicar o sangramento em qualquer inimigo que tenha o ApplyStatus em seu codigo
             IApplyBleed enemyCanBleed = collision.GetComponent<IApplyBleed>();
 
-            if(enemyCanBleed != null)
+            if (enemyCanBleed != null)
             {
-                // Aplica o dano ao entrar em contato
                 enemyCanBleed.TakeDamage(damage);
 
-                // 35% de chance de aplicar sangramento on hit
                 int bleedingChance = Random.Range(0, 100);
 
-                if (bleedingChance <= 35 && !enemyCanBleed.SummonApplyBleed)
-                    // Aplica 40% do dano do lobo, durante um total de 2.5 segundos e o efeito eh aplicado a cada 0.5 segundos
-                    enemyCanBleed.ApplyBleed(damage * 0.4f, 2.5f, 0.5f);
+                if (bleedingChance <= 75 && !enemyCanBleed.SummonApplyBleed)
+                    enemyCanBleed.ApplyBleed(damage * 1.5f, 2, 0.5f);
 
                 attackCooldown = 0;
                 attackCollider.enabled = false;

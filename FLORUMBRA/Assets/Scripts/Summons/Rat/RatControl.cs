@@ -31,19 +31,19 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
 
         if (closestEnemy != null)
         {
-            // Calcula a distancia entre o lobo e o inimigo e o normalized garante que a velocidade de perseguicao sera constante, mesmo com o inimigo se afastando
+            // Calcula a distancia entre o rato e o inimigo e o normalized garante que a velocidade de perseguicao sera constante, mesmo com o inimigo se afastando
             Vector2 direction = (closestEnemy.transform.position - transform.position).normalized;
 
-            // Retorna a informacao se na frente do lobo (a uma distancia de 0.1) há um objeto da layer "Barrier"
+            // Retorna a informacao se na frente do rato (a uma distancia de 0.1) há um objeto da layer "Barrier"
             RaycastHit2D hitBarrier = Physics2D.Raycast(transform.position, direction, 0.5f, LayerMask.GetMask("Barrier"));
 
             if (hitBarrier.collider == null && Vector2.Distance(transform.position, closestEnemy.transform.position) >= 1)
-                // Atualiza a velocidade do lobo com base na direção e movespeed
+                // Atualiza a velocidade do rato com base na direção e movespeed
                 rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
             else
                 Attack();
 
-            // Mudar para onde o lobo olha
+            // Mudar para onde o rato olha
             if (direction.x > 0)
                 transform.localScale = new Vector2(1, 1);
             else if (direction.x < 0)

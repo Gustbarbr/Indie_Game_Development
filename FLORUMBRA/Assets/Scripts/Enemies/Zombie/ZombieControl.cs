@@ -27,7 +27,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
     GameObject closestSummon;
 
     // Habilidades dos summons
-    public bool WolfApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
+    public bool SummonApplyBleed { get; set; } // Eh necessario incluir essa variavel pois ela tambem esta no ApplyStatus
 
     // Habilidades do player
     public bool HitApplyPoison { get; set; }
@@ -134,13 +134,13 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
     public void ApplyBleed(float bleedDamage, float bleedDuration, float bleedInterval)
     {
         // Se o inimigo não estiver sangrando, pode aplicar o sangramento
-        if (!WolfApplyBleed)
+        if (!SummonApplyBleed)
             StartCoroutine(Bleeding(bleedDamage, bleedDuration, bleedInterval));
     }
 
     IEnumerator Bleeding(float bleedDamage, float bleedDuration, float bleedInterval)
     {
-        WolfApplyBleed = true;
+        SummonApplyBleed = true;
         float elapsedBleedTime = 0;
 
         // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
@@ -151,7 +151,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
             elapsedBleedTime += bleedInterval;
         }
 
-        WolfApplyBleed = false;
+        SummonApplyBleed = false;
     }
 
     public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
