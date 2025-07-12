@@ -12,13 +12,17 @@ public class BatControl : MonoBehaviour, ISummon, IDamageable
     public PlayerControl player;
 
     private float moveSpeed = 4.5f;
-    private float detectionRange = 20;
+    private float detectionRange = 15;
     BatAttack attack;
 
     // Ficar perto do player patrulhando
     private Vector3 patrolTarget;
     private bool movingRight = true;
     private float maxDistanceFromPlayer = 25;
+
+    private float hoverHeight = 2f; // Altura na qual o morcego patrulha
+    private float attackDescendHeight = 1f; // O quanto o morcego desce para atacar
+    private float verticalSmoothness = 3f; // Suavidade da descida
 
     void Start()
     {
@@ -46,9 +50,14 @@ public class BatControl : MonoBehaviour, ISummon, IDamageable
             // Retorna a informacao se na frente do morcego (a uma distancia de 0.1) há um objeto da layer "Barrier"
             RaycastHit2D hitBarrier = Physics2D.Raycast(transform.position, direction, 0.5f, LayerMask.GetMask("Barrier"));
 
-            if (hitBarrier.collider == null && Vector2.Distance(transform.position, closestEnemy.transform.position) >= 1.5f)
-                // Atualiza a velocidade do morcego com base na direção e movespeed
-                rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+            Vector3 targetPosition = new Vector3(transform.position.x + direction.x * moveSpeed * Time.deltaTime,
+                // Mathf.Lerp serve para mover suavemente o morcego para baixo. Ela interpola entre a (transform.position.y), b(player.transform.position.y - attackDescendHeight)
+                // e t(Time.deltaTime * verticalSmoothness). O que está em a é a altura do morcego, O que está em b é a altura que deve alcançar e em t está a suavidade,
+                // onde quanto maior o valor, mais rápida a queda.
+                Mathf.Lerp(transform.position.y, hoverHeight - attackDescendHeight, Time.deltaTime * verticalSmoothness), transform.position.z);
+
+            if (hitBarrier.collider == null && Vector2.Distance(transform.position, closestEnemy.transform.position) >= 1f)
+                transform.position = targetPosition;
             else
                 rb.velocity = Vector2.zero;
 
@@ -103,14 +112,10 @@ public class BatControl : MonoBehaviour, ISummon, IDamageable
     void ProtectPlayer()
     {
         if (movingRight)
-        {
-            patrolTarget = player.transform.position + new Vector3(5, 0, 0);
-        }
+            patrolTarget = player.transform.position + new Vector3(5, player.transform.position.y + hoverHeight, 0);
 
         else
-        {
-            patrolTarget = player.transform.position + new Vector3(-5, 0, 0);
-        }
+            patrolTarget = player.transform.position + new Vector3(-5, player.transform.position.y + hoverHeight, 0);
 
         // Calcula a direcao horizontal que o lobo deve seguir ate chegar ao ponto final de patrulha
         Vector2 direction = new Vector2(patrolTarget.x - transform.position.x, 0).normalized;
@@ -122,7 +127,10 @@ public class BatControl : MonoBehaviour, ISummon, IDamageable
         RaycastHit2D hitBarrier = Physics2D.Raycast(origin, direction, 0.5f, LayerMask.GetMask("Barrier"));
 
         if (hitBarrier.collider == null)
-            transform.position = Vector2.MoveTowards(transform.position, patrolTarget, moveSpeed * Time.deltaTime);
+        {
+            Vector3 newBatPosition = Vector2.MoveTowards(transform.position, patrolTarget, moveSpeed * Time.deltaTime);
+            transform.position = new Vector3(newBatPosition.x, Mathf.Lerp(transform.position.y, patrolTarget.y, Time.deltaTime * verticalSmoothness), transform.position.z);
+        }
 
         else
             rb.velocity = Vector2.zero;
@@ -144,8 +152,8 @@ public class BatControl : MonoBehaviour, ISummon, IDamageable
     {
         if (player.mana >= 25)
         {
-            batParent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 0.8f);
-            // Garante que o rato esteja centralizado em seu objeto pai
+            batParent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + hoverHeight);
+            // Garante que o morcego esteja centralizado em seu objeto pai
             transform.localPosition = Vector3.zero;
             player.mana -= 25f;
             player.isSummoned = true;
