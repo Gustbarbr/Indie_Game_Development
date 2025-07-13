@@ -8,6 +8,7 @@ TagManager:
   - Summon
   - Enemy
   - Wall
+  - Intangible
   layers:
   - Default
   - TransparentFX

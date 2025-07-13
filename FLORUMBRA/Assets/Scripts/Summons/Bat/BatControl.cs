@@ -11,7 +11,7 @@ public class BatControl : MonoBehaviour, ISummon, IDamageable
     Rigidbody2D rb;
     public PlayerControl player;
 
-    private float moveSpeed = 4.5f;
+    private float moveSpeed = 7.5f;
     private float detectionRange = 15;
     BatAttack attack;
 

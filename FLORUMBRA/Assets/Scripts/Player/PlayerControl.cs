@@ -22,6 +22,10 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [HideInInspector] public float hp = 100f;
     [HideInInspector] public float mana = 100f;
     [HideInInspector] public float stamina = 100f;
+    public int level = 0;
+    public int xp = 0;
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI coinAmount;
 
     [Header("ATK")]
     public GameObject arrowPrefab;
@@ -44,11 +48,6 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public bool ressurrecting = false; // Checa se está ressucitando ou nao
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
 
-    [Header("Controle de XP e níveis")]
-    public int level = 0;
-    public int xp = 0;
-    public TextMeshProUGUI levelText;
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -65,6 +64,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         manaBar.maxValue = mana;
         staminaBar.maxValue = stamina;
         levelText.SetText(level.ToString());
+        coinAmount.SetText("0");
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate
