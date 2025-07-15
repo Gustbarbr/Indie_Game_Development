@@ -3966,6 +3966,55 @@ MonoBehaviour:
   playerDetected: 0
   summonDetected: 0
   poisonMeter: 0
+--- !u!1 &927399301
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 927399303}
+  - component: {fileID: 927399302}
+  m_Layer: 0
+  m_Name: SaveSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &927399302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927399301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33fce932cdbb3c54f9a35553899e5887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  savedHp: 0
+  savedMana: 0
+  savedStamina: 0
+  savedLevel: 0
+  savedCoins: 0
+--- !u!4 &927399303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927399301}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &954365208
 GameObject:
   m_ObjectHideFlags: 0
@@ -6836,6 +6885,7 @@ MonoBehaviour:
   level: 0
   xp: 0
   levelText: {fileID: 1657076436}
+  coins: 0
   coinAmount: {fileID: 1900979735}
   arrowPrefab: {fileID: 7235316080921566783, guid: c1dd51323c25f574c9c7a20d2df54860, type: 3}
   arrowCharge: 0
@@ -6848,6 +6898,8 @@ MonoBehaviour:
   isSummoned: 0
   ressurrectionCooldown: 0
   ressurrecting: 0
+  hpPotion: 0
+  maxHpPotion: 3
 --- !u!50 &1913572764
 Rigidbody2D:
   serializedVersion: 4
@@ -7395,3 +7447,4 @@ SceneRoots:
   - {fileID: 387338372}
   - {fileID: 157422274}
   - {fileID: 1379772782}
+  - {fileID: 927399303}

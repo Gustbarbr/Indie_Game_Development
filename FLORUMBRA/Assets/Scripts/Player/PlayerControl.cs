@@ -22,9 +22,10 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [HideInInspector] public float hp = 100f;
     [HideInInspector] public float mana = 100f;
     [HideInInspector] public float stamina = 100f;
-    public int level = 0;
-    public int xp = 0;
+    [HideInInspector] public int level = 0;
+    [HideInInspector] public int xp = 0;
     public TextMeshProUGUI levelText;
+    [HideInInspector] public int coins = 0;
     public TextMeshProUGUI coinAmount;
 
     [Header("ATK")]
@@ -48,6 +49,14 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public bool ressurrecting = false; // Checa se está ressucitando ou nao
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
 
+    [Header("Poções")]
+    [HideInInspector] public int hpPotion = 0;
+    [HideInInspector] public int maxHpPotion = 3;
+    [HideInInspector] public int manaPotion = 0;
+    [HideInInspector] public int maxManaPotion = 3;
+    [HideInInspector] public int staminaPotion = 0;
+    [HideInInspector] public int maxStaminaPotion = 3;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -56,9 +65,18 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         if(summons.Count > 0)
             currentSummon = summons[0].GetComponentInChildren<ISummon>();
 
-        hp = 100f + 50 * level;
-        mana = 100f + 25 * level;
-        stamina = 100f + 10 * level;
+        // Se o singleton SaveSystem existir e se ha progresso salvo, carrega os dados do usuário
+        if(SaveSystem.Instance != null && SaveSystem.Instance.savedLevel > 0)
+        {
+            SaveSystem.Instance.LoadPlayer(this);
+        }
+        // Do contrario usa os valores padrões
+        else
+        {
+            hp = 100f + 50 * level;
+            mana = 100f + 25 * level;
+            stamina = 100f + 10 * level;
+        }
 
         hpBar.maxValue = hp;
         manaBar.maxValue = mana;
