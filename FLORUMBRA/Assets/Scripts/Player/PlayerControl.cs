@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
@@ -25,8 +26,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [HideInInspector] public int level = 0;
     [HideInInspector] public int xp = 0;
     public TextMeshProUGUI levelText;
-    [HideInInspector] public int coins = 0;
-    public TextMeshProUGUI coinAmount;
+    [HideInInspector] public int crown = 0;
+    public TextMeshProUGUI crownAmount;
 
     [Header("ATK")]
     public GameObject arrowPrefab;
@@ -50,12 +51,16 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     JumpControl onGround; // Só pode invocar se o player não estiver pulando
 
     [Header("Poções")]
-    [HideInInspector] public int hpPotion = 0;
-    [HideInInspector] public int maxHpPotion = 3;
+    [HideInInspector] public int hpPotion = 0; // Pocoes de vida atuais
+    [HideInInspector] public int allocatedHpPotion = 0; // Pocoes de vida alocadas (As que serao rcarregadas ao descansar)
+    [HideInInspector] public int maxHpPotion = 3; // Quantia maxima de pocoes de vida que podem ser alocadas
     [HideInInspector] public int manaPotion = 0;
+    [HideInInspector] public int allocatedManaPotion = 0;
     [HideInInspector] public int maxManaPotion = 3;
     [HideInInspector] public int staminaPotion = 0;
+    [HideInInspector] public int allocatedStaminaPotion = 0;
     [HideInInspector] public int maxStaminaPotion = 3;
+    [HideInInspector] public int maxAllocatedPotion = 3; // Quantia maxima de pocoes que podem ser alocada
 
     void Start()
     {
@@ -70,19 +75,9 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         {
             SaveSystem.Instance.LoadPlayer(this);
         }
-        // Do contrario usa os valores padrões
-        else
-        {
-            hp = 100f + 50 * level;
-            mana = 100f + 25 * level;
-            stamina = 100f + 10 * level;
-        }
 
-        hpBar.maxValue = hp;
-        manaBar.maxValue = mana;
-        staminaBar.maxValue = stamina;
         levelText.SetText(level.ToString());
-        coinAmount.SetText("0");
+        crownAmount.SetText("0");
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate
@@ -160,8 +155,11 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         // Tempo entre cada ataque
         arrowRecharge += Time.deltaTime;
 
+        // Verifica se o mouse está em cima de um objeto UI (eh usado para evitar conflito com o botao de loot)
+        bool mouseOverUI = EventSystem.current.IsPointerOverGameObject();
+
         // Enquanto o botão for pressionado, stamina será gasta
-        if (Input.GetButton("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 1)
+        if (Input.GetButton("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 1 && !mouseOverUI)
         {
             // Carrega a flecha até seu tempo máximo
             if (arrowCharge <= 100)
@@ -174,7 +172,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
 
         // Só pode atacar se o botão do mouse for solto, estiver fora do tempo de recarga e tiver stamina
-        else if ((Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0))
+        else if ((Input.GetButtonUp("Fire1") && arrowRecharge > attackCoolDown && staminaBar.value > 0) && !mouseOverUI)
         {
             // Determina a direção da flecha com base na escala do jogador, ou seja, para onde está olhando
             float direction = transform.localScale.x;
@@ -266,15 +264,32 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         HitApplyPoison = false;
     }
 
+    private void UpdateStats()
+    {
+        hp = 100f + 50 * level;
+        mana = 100f + 25 * level;
+        stamina = 100f + 10 * level;
+        hpBar.maxValue = hp;
+        manaBar.maxValue = mana;
+        staminaBar.maxValue = stamina;
+    }
+
     private void LevelUp()
     {
         if(xp >= xpBar.maxValue)
         {
             level += 1;
             xp = 0;
-            xpBar.maxValue += xpBar.maxValue * 2;
+            xpBar.maxValue += 100 * level;
             levelText.SetText(level.ToString());
             ressurrectionCooldown = 10 - level * 0.5f;
+            UpdateStats();
         }
+    }
+
+    public void AddCrowns(int amount)
+    {
+        crown += amount;
+        crownAmount.SetText(crown.ToString());
     }
 }

@@ -8,11 +8,8 @@ public class SaveSystem : MonoBehaviour
     // get - qualquer codigo pode acessar seus valores por ser público; private set - somente a instancia pode escrever valores.
     public static SaveSystem Instance { get; private set; }
 
-    public float savedHp;
-    public float savedMana;
-    public float savedStamina;
     public int savedLevel;
-    public int savedCoins;
+    public int savedCrown;
 
 
     private void Awake()
@@ -32,19 +29,13 @@ public class SaveSystem : MonoBehaviour
 
     public void SavePlayer(PlayerControl player)
     {
-        savedHp = player.hp;
-        savedMana = player.mana;
-        savedStamina = player.stamina;
         savedLevel = player.level;
-        savedCoins = player.coins;
+        savedCrown = player.crown;
     }
 
     public void LoadPlayer(PlayerControl player)
     {
-        player.hp = savedHp;
-        player.mana = savedMana;
-        player.stamina = savedStamina;
         player.level = savedLevel;
-        player.coins = savedCoins;
+        player.crown = savedCrown;
     }
 }

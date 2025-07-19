@@ -7,6 +7,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
     Rigidbody2D rb;
     public Slider hp;
     PlayerControl player;
+    public GameObject hud;
 
     // Velocidade de movimento
     private float enemyPatrolSpeed = 0.5f;
@@ -113,7 +114,24 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
         if (hp.value <= 0)
         {
             player.xp += 35 + 5 * player.level;
-            Destroy(gameObject);
+            foreach (Transform hudling in hud.transform)
+            {
+                if (hudling.name == "HP Bar")
+                    hudling.gameObject.SetActive(false);
+                else if (hudling.name == "Loot Border")
+                    hudling.gameObject.SetActive(true);
+            }
+
+            // O objeto responsavel pelo ataque eh o segundo filho
+            Transform attack = transform.GetChild(2);
+            attack.gameObject.SetActive(false); // Desativa o segundo filho
+
+            CapsuleCollider2D body = GetComponent<CapsuleCollider2D>();
+            body.enabled = false; // Desativa o colisor
+
+            this.tag = "Defeated"; // Impede que summons detectem
+
+            this.enabled = false; // Desativa esse componente
         }
     }
 

@@ -7,6 +7,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
     Rigidbody2D rb;
     public Slider hp;
     PlayerControl player;
+    public GameObject hudHpBar;
 
     // Velocidade de movimento
     private float enemyPatrolSpeed = 1.5f;
@@ -25,6 +26,8 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
     // Armazenar cada summon para checar se estão mais próximos que o player
     GameObject closestSummon;
+
+    // Itens que podem ser dropados
 
     private void Start()
     {
@@ -106,7 +109,19 @@ public class SkeletonControl : MonoBehaviour, IDamageable
         if (hp.value <= 0)
         {
             player.xp += 10 + 2 * player.level;
-            Destroy(gameObject);
+
+            hudHpBar.SetActive(false);
+
+            // O objeto responsavel pelo ataque eh o segundo filho
+            Transform attack = transform.GetChild(2);
+            attack.gameObject.SetActive(false); // Desativa o segundo filho
+
+            CapsuleCollider2D body = GetComponent<CapsuleCollider2D>();
+            body.enabled = false; // Desativa o colisor
+
+            this.tag = "Defeated"; // Impede que summons detectem
+
+            this.enabled = false; // Desativa esse componente
         }
     }
 

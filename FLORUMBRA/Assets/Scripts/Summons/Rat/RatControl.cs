@@ -65,7 +65,7 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
             if (poisonMeter >= 100)
             {
                 poisonMeter = 0;
-                poisonEnemy.ApplyPoison(15, 4, 1);
+                poisonEnemy.ApplyPoison(damage * 3, 4, 1);
             }
         }
         player.isSummoned = false;
