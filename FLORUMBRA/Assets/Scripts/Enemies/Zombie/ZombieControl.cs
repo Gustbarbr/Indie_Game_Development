@@ -7,7 +7,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
     Rigidbody2D rb;
     public Slider hp;
     PlayerControl player;
-    public GameObject hud;
+    public GameObject hudHpBar;
 
     // Velocidade de movimento
     private float enemyPatrolSpeed = 0.5f;
@@ -114,13 +114,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
         if (hp.value <= 0)
         {
             player.xp += 35 + 5 * player.level;
-            foreach (Transform hudling in hud.transform)
-            {
-                if (hudling.name == "HP Bar")
-                    hudling.gameObject.SetActive(false);
-                else if (hudling.name == "Loot Border")
-                    hudling.gameObject.SetActive(true);
-            }
+            hudHpBar.SetActive(false);
 
             // O objeto responsavel pelo ataque eh o segundo filho
             Transform attack = transform.GetChild(2);

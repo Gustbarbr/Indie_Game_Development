@@ -29,6 +29,12 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [HideInInspector] public int crown = 0;
     public TextMeshProUGUI crownAmount;
 
+    [Header("Inventário")]
+    public TextMeshProUGUI metalAmount;
+    [HideInInspector] public int metal = 0;
+    public TextMeshProUGUI rottenMeatAmount;
+    [HideInInspector] public int rottenMeat = 0;
+
     [Header("ATK")]
     public GameObject arrowPrefab;
     private float attackCoolDown = 0.5f;
@@ -291,5 +297,17 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     {
         crown += amount;
         crownAmount.SetText(crown.ToString());
+    }
+
+    public void AddMetal(int amount)
+    {
+        metal += amount;
+        metalAmount.SetText(metal.ToString());
+    }
+
+    public void AddRottenMeat(int amount)
+    {
+        rottenMeat += amount;
+        rottenMeatAmount.SetText(rottenMeat.ToString());
     }
 }

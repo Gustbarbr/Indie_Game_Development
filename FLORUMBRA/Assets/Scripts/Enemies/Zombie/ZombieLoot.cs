@@ -3,44 +3,44 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class SkeletonLoot : MonoBehaviour
+public class ZombieLoot : MonoBehaviour
 {
-    SkeletonControl skeleton;
+    ZombieControl zombie;
     PlayerControl player;
     public GameObject loot;
 
     public TextMeshProUGUI crownQuantityText;
     public GameObject crownLoot;
 
-    public TextMeshProUGUI metalQuantityText;
-    public GameObject metalLoot;
+    public TextMeshProUGUI rottenMeatQuantityText;
+    public GameObject rottenMeatLoot;
 
     private bool nextToPlayer = false;
     private bool defineCrownValue = true;
     private bool crownWasDropped = false;
 
-    private bool defineMetalValue = true;
-    private bool metalWasDropped = false;
+    private bool defineRottenMeatValue = true;
+    private bool rottenMeatWasDropped = false;
 
     private int enemyDropedLoot = 0;
     public int crownQuantityToPickup;
-    public int metalQuantityToPickup;
+    public int rottenMeatQuantityToPickup;
 
     private void Start()
     {
-        skeleton = GetComponent<SkeletonControl>();
+        zombie = GetComponent<ZombieControl>();
         player = FindAnyObjectByType<PlayerControl>();
     }
 
     private void Update()
     {
-        if(Vector2.Distance(transform.position, player.transform.position) <= 2.5f)
+        if (Vector2.Distance(transform.position, player.transform.position) <= 2.5f)
             nextToPlayer = true;
         else
             nextToPlayer = false;
 
         EnemyDropedCrown();
-        EnemyDropedMetal();
+        EnemyDropedRottenMeat();
 
         if (nextToPlayer && enemyDropedLoot >= 1)
             loot.SetActive(true);
@@ -52,12 +52,12 @@ public class SkeletonLoot : MonoBehaviour
     {
         if (defineCrownValue)
         {
-            if (skeleton.hp.value <= 0)
+            if (zombie.hp.value <= 0)
             {
                 int CrownDrop = Random.Range(0, 100);
-                int crownQuantity = Random.Range(5, 15);
+                int crownQuantity = Random.Range(10, 35);
 
-                if (CrownDrop <= 85)
+                if (CrownDrop <= 60)
                 {
                     enemyDropedLoot += 1;
                     crownLoot.transform.localPosition = new Vector2(0, 90);
@@ -82,45 +82,45 @@ public class SkeletonLoot : MonoBehaviour
         crownLoot.SetActive(false);
         enemyDropedLoot -= 1;
 
-        if(metalWasDropped)
-            metalLoot.transform.localPosition = new Vector2(0, 90);
+        if (rottenMeatWasDropped)
+            rottenMeatLoot.transform.localPosition = new Vector2(0, 90);
     }
 
-    private void EnemyDropedMetal()
+    private void EnemyDropedRottenMeat()
     {
-        if (defineMetalValue)
+        if (defineRottenMeatValue)
         {
-            if (skeleton.hp.value <= 0)
+            if (zombie.hp.value <= 0)
             {
-                int metalDrop = Random.Range(0, 100);
-                int metalQuantity = Random.Range(5, 15);
+                int rottenMeatDrop = Random.Range(0, 100);
+                int rottenMeatQuantity = Random.Range(5, 15);
 
-                if (metalDrop <= 30)
+                if (rottenMeatDrop <= 15)
                 {
                     enemyDropedLoot += 1;
-                    if(crownWasDropped)
-                        metalLoot.transform.localPosition = new Vector2(0, -1200);
+                    if (crownWasDropped)
+                        rottenMeatLoot.transform.localPosition = new Vector2(0, -1200);
                     else
-                        metalLoot.transform.localPosition = new Vector2(0, 90);
-                    metalLoot.SetActive(true);
-                    metalQuantityToPickup = metalQuantity;
-                    metalQuantityText.SetText("X" + metalQuantity.ToString());
-                    metalWasDropped = true;
+                        rottenMeatLoot.transform.localPosition = new Vector2(0, 90);
+                    rottenMeatLoot.SetActive(true);
+                    rottenMeatQuantityToPickup = rottenMeatQuantity;
+                    rottenMeatQuantityText.SetText("X" + rottenMeatQuantity.ToString());
+                    rottenMeatWasDropped = true;
                 }
                 else
                 {
-                    metalLoot.SetActive(false);
+                    rottenMeatLoot.SetActive(false);
                 }
 
-                defineMetalValue = false;
+                defineRottenMeatValue = false;
             }
         }
     }
 
-    public void OnLootMetal()
+    public void OnLootRottenMeat()
     {
-        player.AddMetal(metalQuantityToPickup);
-        metalLoot.SetActive(false);
+        player.AddRottenMeat(rottenMeatQuantityToPickup);
+        rottenMeatLoot.SetActive(false);
         enemyDropedLoot -= 1;
     }
 }
