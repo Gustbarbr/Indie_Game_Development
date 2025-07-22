@@ -99,7 +99,7 @@ public class SkeletonLoot : MonoBehaviour
                 {
                     enemyDropedLoot += 1;
                     if(crownWasDropped)
-                        metalLoot.transform.localPosition = new Vector2(0, -1200);
+                        metalLoot.transform.localPosition = new Vector2(0, -1000);
                     else
                         metalLoot.transform.localPosition = new Vector2(0, 90);
                     metalLoot.SetActive(true);

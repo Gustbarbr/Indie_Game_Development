@@ -99,7 +99,7 @@ public class ZombieLoot : MonoBehaviour
                 {
                     enemyDropedLoot += 1;
                     if (crownWasDropped)
-                        rottenMeatLoot.transform.localPosition = new Vector2(0, -1200);
+                        rottenMeatLoot.transform.localPosition = new Vector2(0, -1000);
                     else
                         rottenMeatLoot.transform.localPosition = new Vector2(0, 90);
                     rottenMeatLoot.SetActive(true);

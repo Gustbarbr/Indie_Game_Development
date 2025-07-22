@@ -25,6 +25,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [HideInInspector] public float stamina = 100f;
     [HideInInspector] public int level = 0;
     [HideInInspector] public int xp = 0;
+    public GameObject inventory;
     public TextMeshProUGUI levelText;
     [HideInInspector] public int crown = 0;
     public TextMeshProUGUI crownAmount;
@@ -105,6 +106,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         staminaBar.value = stamina;
         manaBar.value = mana;
         xpBar.value = xp;
+        OpenInventory();
     }
 
     public void PlayerMovement()
@@ -293,6 +295,14 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
     }
 
+    private void OpenInventory()
+    {
+        if (Input.GetKey(KeyCode.I))
+            inventory.SetActive(true);
+        else 
+            inventory.SetActive(false);
+    }
+
     public void AddCrowns(int amount)
     {
         crown += amount;
@@ -302,12 +312,12 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public void AddMetal(int amount)
     {
         metal += amount;
-        metalAmount.SetText(metal.ToString());
+        metalAmount.SetText("X" + metal.ToString());
     }
 
     public void AddRottenMeat(int amount)
     {
         rottenMeat += amount;
-        rottenMeatAmount.SetText(rottenMeat.ToString());
+        rottenMeatAmount.SetText("X" + rottenMeat.ToString());
     }
 }
