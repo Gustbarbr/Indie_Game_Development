@@ -15,6 +15,14 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [SerializeField] float sprintVelocity = 2.5f;
     [SerializeField] bool exhaustion = false;
 
+    [Header("Esquiva")]
+    public float dashDistance = 1f;
+    [HideInInspector] public float dashDuration = 0.2f;
+    [HideInInspector] public float dashCooldown = 1.5f;
+    private bool isPerformingDash = false;
+    private bool invencibility = false;
+    private float dashCooldownTimer = 0f;
+
     [Header("HUD")]
     public Slider hpBar;
     public Slider manaBar;
@@ -59,15 +67,15 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
     [Header("Poções")]
     [HideInInspector] public int hpPotion = 0; // Pocoes de vida atuais
-    [HideInInspector] public int allocatedHpPotion = 0; // Pocoes de vida alocadas (As que serao rcarregadas ao descansar)
-    [HideInInspector] public int maxHpPotion = 3; // Quantia maxima de pocoes de vida que podem ser alocadas
     [HideInInspector] public int manaPotion = 0;
-    [HideInInspector] public int allocatedManaPotion = 0;
-    [HideInInspector] public int maxManaPotion = 3;
     [HideInInspector] public int staminaPotion = 0;
+    [HideInInspector] public int allocatedHpPotion = 0; // Pocoes de vida alocadas (As que serao rcarregadas ao descansar)
+    [HideInInspector] public int allocatedManaPotion = 0;
     [HideInInspector] public int allocatedStaminaPotion = 0;
-    [HideInInspector] public int maxStaminaPotion = 3;
-    [HideInInspector] public int maxAllocatedPotion = 3; // Quantia maxima de pocoes que podem ser alocada
+    [HideInInspector] public int maxAllocablePotion = 3; // Quantia maxima de pocoes que podem ser alocada
+    public TextMeshProUGUI hpPotionQuantity;
+    public TextMeshProUGUI manaPotionQuantity;
+    public TextMeshProUGUI staminaPotionQuantity;
 
     void Start()
     {
@@ -83,6 +91,10 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             SaveSystem.Instance.LoadPlayer(this);
         }
 
+        hpPotion = 1;
+        manaPotion = 1;
+        staminaPotion = 1;
+
         levelText.SetText(level.ToString());
         crownAmount.SetText("0");
     }
@@ -96,6 +108,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     // Por ser necessário atualizar frame a frama é mais recomendado usar update
     void Update()
     {
+        Dash();
         ShootArrow();
         SummonCompanion();
         RessurrectCompanion();
@@ -107,6 +120,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         manaBar.value = mana;
         xpBar.value = xp;
         OpenInventory();
+        UsePotion();
     }
 
     public void PlayerMovement()
@@ -156,6 +170,45 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
 
         rb.velocity = new Vector2(horizontalMovement * velocity, rb.velocity.y);
+    }
+
+    private void Dash()
+    {
+        if(dashCooldownTimer > 0)
+            dashCooldownTimer -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetButton("Fire2") && !isPerformingDash && dashCooldownTimer <= 0f && stamina >= 15f)
+        {
+            stamina -= 15f;
+            StartCoroutine(PerformDash());
+            dashCooldownTimer = dashCooldown;
+        }
+            
+    }
+
+    private IEnumerator PerformDash()
+    {
+        isPerformingDash = true;
+        invencibility = true;
+
+        float direction = transform.localScale.x;
+        float elapsedTime = 0f;
+        Vector2 start = transform.position;
+        Vector2 end = start + new Vector2(direction * dashDistance, 0);
+
+        while(elapsedTime < dashDuration)
+        {
+            float t = elapsedTime / dashDuration; // Parâmetro de interpolação 
+            rb.MovePosition(Vector2.Lerp(start, end, t));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.MovePosition(end);
+        isPerformingDash = false;
+
+        yield return new WaitForSeconds(0.2f);
+        invencibility = false;
     }
 
     public void ShootArrow()
@@ -246,6 +299,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
     public void TakeDamage(float amount)
     {
+        if (invencibility) return;
         hp -= amount;
     }
 
@@ -301,6 +355,31 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             inventory.SetActive(true);
         else 
             inventory.SetActive(false);
+    }
+
+    private void UsePotion()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && hpPotion >= 1)
+        {
+            hpPotion -= 1;
+            hp += 20;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2) && manaPotion >= 1)
+        {
+            manaPotion -= 1;
+            mana += 20;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3) && staminaPotion >= 1)
+        {
+            staminaPotion -= 1;
+            stamina += 20;
+        }
+
+        hpPotionQuantity.SetText("x" + hpPotion.ToString());
+        manaPotionQuantity.SetText("x" + manaPotion.ToString());
+        staminaPotionQuantity.SetText("x" + staminaPotion.ToString());
     }
 
     public void AddCrowns(int amount)
