@@ -156,7 +156,7 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
         float elapsedBleedTime = 0;
 
         // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
-        while (elapsedBleedTime < bleedDuration)
+        while (elapsedBleedTime < bleedDuration && hp.value > 0)
         {
             TakeDamage(bleedDamage);
             yield return new WaitForSeconds(bleedInterval);

@@ -59,6 +59,11 @@ public class BullControl : MonoBehaviour, ISummon
 
     }
 
+    void OnEnable()
+    {
+        transform.position = player.transform.position;
+    }
+
     void DamageEnemiesInPath(Vector2 direction)
     {
         // A distancia de efeito do acerto

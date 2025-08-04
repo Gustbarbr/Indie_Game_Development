@@ -15,9 +15,6 @@ public class WolfControl : MonoBehaviour, IApplyPoison, IDamageable, ISummon
     private float detectionRange = 20;
     private Rigidbody2D rb;
 
-    // Ficar perto do player patrulhando
-    private Vector3 patrolTarget;
-    private bool movingRight = true;
     private float maxDistanceFromPlayer = 25;
 
     // Efeitos dos inimigos
@@ -72,7 +69,6 @@ public class WolfControl : MonoBehaviour, IApplyPoison, IDamageable, ISummon
     void OnEnable()
     {
         transform.position = player.transform.position;
-        movingRight = true;
     }
 
     GameObject ChaseEnemy()

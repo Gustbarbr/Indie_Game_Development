@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 {
     Rigidbody2D rb;
+    [HideInInspector] public bool resting = false;
 
     [Header("Movimentação")]
     [SerializeField] float velocity = 5;
@@ -94,7 +95,9 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         hpPotion = 1;
         manaPotion = 1;
         staminaPotion = 1;
-
+        allocatedHpPotion = hpPotion;
+        allocatedManaPotion = manaPotion;
+        allocatedStaminaPotion = staminaPotion;
         levelText.SetText(level.ToString());
         crownAmount.SetText("0");
     }
@@ -316,7 +319,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         float elapsedPoisonTime = 0;
 
         // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
-        while (elapsedPoisonTime < poisonDuration)
+        while (elapsedPoisonTime < poisonDuration && resting == false)
         {
             TakeDamage(poisonDamage);
             yield return new WaitForSeconds(poisonInterval);
