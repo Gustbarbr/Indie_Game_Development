@@ -8,12 +8,14 @@ public class SkeletonControl : MonoBehaviour, IDamageable
     public Slider hp;
     PlayerControl player;
     public GameObject hudHpBar;
+    SkeletonLoot loot;
 
     // Velocidade de movimento
     private float enemyPatrolSpeed = 1.5f;
     private float enemyChaseSpeed = 3;
 
     private float defense = 0.25f;
+    private Vector2 initialPosition;
 
     // Pontos de patrulha
     [SerializeField] Transform A;
@@ -33,7 +35,9 @@ public class SkeletonControl : MonoBehaviour, IDamageable
     {
         rb = GetComponent<Rigidbody2D>();
         player = FindObjectOfType<PlayerControl>();
+        loot = GetComponent<SkeletonLoot>();
         transform.position = A.position;
+        initialPosition = transform.position;
         target = B;
     }
 
@@ -170,5 +174,26 @@ public class SkeletonControl : MonoBehaviour, IDamageable
                 }
             }
         }
+    }
+
+    public void ResetEnemy()
+    {
+        transform.position = initialPosition;
+        rb.velocity = Vector2.zero;
+        target = B;
+        playerDetected = false;
+        summonDetected = false;
+        closestSummon = null;
+        hp.value = hp.maxValue;
+        hudHpBar.SetActive(true);
+
+        Transform attack = transform.GetChild(2);
+        attack.gameObject.SetActive(true);
+
+        CapsuleCollider2D body = GetComponent<CapsuleCollider2D>();
+        body.enabled = true;
+        this.tag = "Enemy";
+        this.enabled = true;
+        loot.ResetLootDrop();
     }
 }

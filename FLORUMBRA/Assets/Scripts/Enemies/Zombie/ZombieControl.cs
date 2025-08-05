@@ -8,12 +8,14 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
     public Slider hp;
     PlayerControl player;
     public GameObject hudHpBar;
+    ZombieLoot loot;
 
     // Velocidade de movimento
     private float enemyPatrolSpeed = 0.5f;
     private float enemyChaseSpeed = 4.5f;
 
     private float defense = 0.35f;
+    private Vector2 initialPosition;
 
     // Pontos de patrulha
     [SerializeField] Transform A;
@@ -38,7 +40,9 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
     {
         rb = GetComponent<Rigidbody2D>();
         player = FindObjectOfType<PlayerControl>();
+        loot = GetComponent<ZombieLoot>();
         transform.position = A.position;
+        initialPosition = transform.position;
         target = B;
     }
 
@@ -234,5 +238,27 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
                 }
             }
         }
+    }
+
+    public void ResetEnemy()
+    {
+        transform.position = initialPosition;
+        rb.velocity = Vector2.zero;
+        target = B;
+        playerDetected = false;
+        summonDetected = false;
+        closestSummon = null;
+        hp.value = hp.maxValue;
+        hudHpBar.SetActive(true);
+
+        Transform attack = transform.GetChild(2);
+        attack.gameObject.SetActive(true);
+
+        CapsuleCollider2D body = GetComponent<CapsuleCollider2D>();
+        body.enabled = true;
+        this.tag = "Enemy";
+        this.enabled = true;
+
+        loot.ResetLootDrop();
     }
 }

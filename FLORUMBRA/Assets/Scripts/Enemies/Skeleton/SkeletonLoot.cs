@@ -123,4 +123,16 @@ public class SkeletonLoot : MonoBehaviour
         metalLoot.SetActive(false);
         enemyDropedLoot -= 1;
     }
+
+    public void ResetLootDrop()
+    {
+        defineCrownValue = true;
+        defineMetalValue = true;
+        crownWasDropped = false;
+        metalWasDropped = false;
+        enemyDropedLoot = 0;
+        crownLoot.SetActive(false);
+        metalLoot.SetActive(false);
+        loot.SetActive(false);
+    }
 }

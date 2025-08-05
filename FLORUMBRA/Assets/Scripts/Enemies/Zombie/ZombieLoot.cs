@@ -123,4 +123,16 @@ public class ZombieLoot : MonoBehaviour
         rottenMeatLoot.SetActive(false);
         enemyDropedLoot -= 1;
     }
+
+    public void ResetLootDrop()
+    {
+        defineCrownValue = true;
+        defineRottenMeatValue = true;
+        crownWasDropped = false;
+        rottenMeatWasDropped = false;
+        enemyDropedLoot = 0;
+        crownLoot.SetActive(false);
+        rottenMeatLoot.SetActive(false);
+        loot.SetActive(false);
+    }
 }

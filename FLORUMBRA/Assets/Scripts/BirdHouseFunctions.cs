@@ -43,6 +43,16 @@ public class BirdHouseFunctions : MonoBehaviour
 
     void ResetEnemies()
     {
+        SkeletonControl[] skeleton = FindObjectsOfType<SkeletonControl>();
+        foreach(SkeletonControl skel in skeleton)
+        {
+            skel.ResetEnemy();
+        }
 
+        ZombieControl[] zombie = FindObjectsOfType<ZombieControl>();
+        foreach (ZombieControl zomb in zombie)
+        {
+            zomb.ResetEnemy();
+        }
     }
 }
