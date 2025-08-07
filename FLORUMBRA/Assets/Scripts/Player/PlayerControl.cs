@@ -9,6 +9,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 {
     Rigidbody2D rb;
     [HideInInspector] public bool resting = false;
+    [HideInInspector] public int def = 0;
 
     [Header("Movimentação")]
     [SerializeField] float velocity = 5;
@@ -255,6 +256,12 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         }
     }
 
+    public void TakeDamage(float amount)
+    {
+        if (invencibility) return;
+        hp -= amount - (def * 0.1f);
+    }
+
     public void SummonCompanion()
     {
         if (ressurrecting == false)
@@ -298,12 +305,6 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             currentSummon = summons[currentSummonIndex].GetComponentInChildren<ISummon>();
             Debug.Log("Summon atual: " + currentSummon);
         }
-    }
-
-    public void TakeDamage(float amount)
-    {
-        if (invencibility) return;
-        hp -= amount;
     }
 
     public void ApplyPoison(float poisonDamage, float poisonDuration, float poisonInterval)
