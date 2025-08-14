@@ -135,7 +135,7 @@ public class SkeletonControl : MonoBehaviour, IDamageable
         if (collision.CompareTag("Arrow"))
         {
             // Causa dano na barra de vida, levando em conta o dano do player (o quanto o ataque foi carregado) dividido pela defesa (no caso multiplicar por numeros abaixo de 0 funciona como divisao)
-            float arrowDamage = (player.arrowCharge + player.level * 20) * defense;
+            float arrowDamage = player.finalDamage * defense;
             TakeDamage(arrowDamage);
 
             Destroy(collision.gameObject);

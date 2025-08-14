@@ -50,7 +50,9 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public GameObject arrowPrefab;
     private float attackCoolDown = 0.5f;
     private float arrowRecharge;
-    public float arrowCharge = 0; // Dano do player, pode ser carregado ao segurar o botão para causar mais dano
+    public float arrowCharge = 0f; // Dano do player, pode ser carregado ao segurar o botão para causar mais dano
+    public float damage = 1f;
+    public float finalDamage;
 
     [Header("Itens do player")]
     public bool poisonArrow = false;
@@ -78,6 +80,11 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public TextMeshProUGUI hpPotionQuantity;
     public TextMeshProUGUI manaPotionQuantity;
     public TextMeshProUGUI staminaPotionQuantity;
+
+    [Header("Upgrades")]
+    public float arrowLevel = 1;
+    public float quiverLevel = 1;
+    public float armorLevel = 1;
 
     void Start()
     {
@@ -251,6 +258,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             // Define a direção que a flecha será disparada com base na variável direction
             arrow.GetComponent<ArrowControl>().SetDirection(direction);
 
+            finalDamage = damage * arrowCharge;
+
             // Entra em tempo de recarga
             arrowRecharge = 0;
         }
@@ -332,6 +341,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
     private void UpdateStats()
     {
+        damage = damage * 1.5f;
         hp = 100f + 50 * level;
         mana = 100f + 25 * level;
         stamina = 100f + 10 * level;
