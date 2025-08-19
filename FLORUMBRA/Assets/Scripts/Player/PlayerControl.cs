@@ -63,7 +63,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [Header("Summons")]
     public List<GameObject> summons = new List<GameObject>(); // Cria uma lista para guardar os summons
     private int currentSummonIndex = 0; // Indice da lista de summons
-    private ISummon currentSummon; // Interface ISummon
+    public ISummon currentSummon; // Interface ISummon
     public bool isSummoned = false; // Verifica se o companion está invocado
     public float ressurrectionCooldown = 10; // Tempo para ressucitar
     public bool ressurrecting = false; // Checa se está ressucitando ou nao
@@ -329,11 +329,15 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         float elapsedPoisonTime = 0;
 
         // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
-        while (elapsedPoisonTime < poisonDuration && resting == false)
+        while (elapsedPoisonTime < poisonDuration)
         {
+            if (resting == true)
+                break;
+
             TakeDamage(poisonDamage);
             yield return new WaitForSeconds(poisonInterval);
             elapsedPoisonTime += poisonInterval;
+            Debug.Log("Envenenado");
         }
 
         HitApplyPoison = false;

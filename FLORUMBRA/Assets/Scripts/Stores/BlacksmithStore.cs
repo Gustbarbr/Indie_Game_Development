@@ -11,6 +11,10 @@ public class BlacksmithStore : MonoBehaviour
 
     public TextMeshProUGUI arrowLevelText;
 
+    public TextMeshProUGUI arrowUpgradeMaterialOwned;
+    public TextMeshProUGUI arrowUpgradeMaterialCost;
+    public TextMeshProUGUI arrowUpgradeCrownCost;
+
     private void Start()
     {
         player = FindObjectOfType<PlayerControl>();
@@ -31,17 +35,53 @@ public class BlacksmithStore : MonoBehaviour
             interactionButtonDisplay.SetActive(false);
             blacksmithItems.SetActive(false);
         }
+
+        UpgradeMaterials();
+    }
+
+    void UpgradeMaterials()
+    {
+        if (player.arrowLevel == 1)
+        {
+            arrowUpgradeMaterialOwned.SetText(player.metal.ToString());
+            arrowUpgradeMaterialCost.SetText("/ 2");
+            arrowUpgradeCrownCost.SetText("(-100)");
+        }
+
+        if (player.arrowLevel == 2)
+        {
+            arrowUpgradeMaterialOwned.SetText(player.metal.ToString());
+            arrowUpgradeMaterialCost.SetText("/ 6");
+            arrowUpgradeCrownCost.SetText("(-300)");
+        }
+
+        if (player.arrowLevel == 3)
+        {
+            arrowUpgradeMaterialOwned.SetText(" ");
+        }
     }
 
     public void ArrowUpgrade()
     {
-        if(player.arrowLevel == 1 && player.metal >= 2 && player.crown >= 1)
+        if(player.arrowLevel == 1 && player.metal >= 2 && player.crown >= 100)
         {
             player.damage *= 1.20f;
             player.metal -= 2;
-            player.crown -= 1;
+            player.crown -= 100;
             player.arrowLevel = 2;
             player.metalAmount.SetText("X" + player.metal.ToString());
+            player.crownAmount.SetText("X" + player.crown.ToString());
+            arrowLevelText.SetText("Lvl. " + player.arrowLevel.ToString());
+        }
+
+        if (player.arrowLevel == 2 && player.metal >= 6 && player.crown >= 300)
+        {
+            player.damage *= 1.20f;
+            player.metal -= 6;
+            player.crown -= 300;
+            player.arrowLevel = 3;
+            player.metalAmount.SetText("X" + player.metal.ToString());
+            player.crownAmount.SetText("X" + player.crown.ToString());
             arrowLevelText.SetText("Lvl. " + player.arrowLevel.ToString());
         }
     }

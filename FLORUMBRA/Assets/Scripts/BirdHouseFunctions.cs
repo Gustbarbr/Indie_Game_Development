@@ -39,6 +39,8 @@ public class BirdHouseFunctions : MonoBehaviour
         player.manaPotion = player.allocatedManaPotion;
         player.staminaPotion = player.allocatedStaminaPotion;
         player.resting = true;
+        player.ressurrecting = false;
+        player.currentSummon.OnRessurrect();
     }
 
     void ResetEnemies()
