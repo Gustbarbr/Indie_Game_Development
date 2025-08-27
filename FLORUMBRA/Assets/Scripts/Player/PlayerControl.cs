@@ -8,8 +8,7 @@ using UnityEngine.UI;
 public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 {
     Rigidbody2D rb;
-    [HideInInspector] public bool resting = false;
-    [HideInInspector] public int def = 0;
+    public int def = 0;
 
     [Header("Movimentação")]
     [SerializeField] float velocity = 5;
@@ -37,19 +36,22 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     [HideInInspector] public int xp = 0;
     public GameObject inventory;
     public TextMeshProUGUI levelText;
-    [HideInInspector] public int crown = 0;
+    public int crown = 0;
     public TextMeshProUGUI crownAmount;
 
     [Header("Inventário")]
     public TextMeshProUGUI metalAmount;
-    [HideInInspector] public int metal = 0;
-    public TextMeshProUGUI rottenMeatAmount;
-    [HideInInspector] public int rottenMeat = 0;
+    public int metal = 0;
+    public TextMeshProUGUI leatherAmount;
+    public int leather = 0;
+    public TextMeshProUGUI ancientOreAmount;
+    public int ancientOre = 0;
 
     [Header("ATK")]
     public GameObject arrowPrefab;
     private float attackCoolDown = 0.5f;
     private float arrowRecharge;
+    public float arrowRechargeMultiplier = 1f;
     public float arrowCharge = 0f; // Dano do player, pode ser carregado ao segurar o botão para causar mais dano
     public float damage = 1f;
     public float finalDamage;
@@ -225,7 +227,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public void ShootArrow()
     {
         // Tempo entre cada ataque
-        arrowRecharge += Time.deltaTime;
+        arrowRecharge += Time.deltaTime * arrowRechargeMultiplier;
 
         // Verifica se o mouse está em cima de um objeto UI (eh usado para evitar conflito com o botao de loot)
         bool mouseOverUI = EventSystem.current.IsPointerOverGameObject();
@@ -331,9 +333,6 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         // Enquanto a duracao total nao for atingida, o inimigo toma dano equivalente ao sangramento (o valor do sangramento está no wolf attack)
         while (elapsedPoisonTime < poisonDuration)
         {
-            if (resting == true)
-                break;
-
             TakeDamage(poisonDamage);
             yield return new WaitForSeconds(poisonInterval);
             elapsedPoisonTime += poisonInterval;
@@ -352,6 +351,20 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         hpBar.maxValue = hp;
         manaBar.maxValue = mana;
         staminaBar.maxValue = stamina;
+    }
+
+    public void RestorePlayerStatus()
+    {
+        hp += hpBar.maxValue - hpBar.value;
+        mana += manaBar.maxValue - manaBar.value;
+        stamina += staminaBar.maxValue - staminaBar.value;
+        hpPotion = allocatedHpPotion;
+        manaPotion = allocatedManaPotion;
+        staminaPotion = allocatedStaminaPotion;
+        HitApplyPoison = false;
+        StopAllCoroutines();
+        ressurrecting = false;
+        currentSummon.OnRessurrect();
     }
 
     private void LevelUp()
@@ -412,9 +425,9 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         metalAmount.SetText("X" + metal.ToString());
     }
 
-    public void AddRottenMeat(int amount)
+    public void AddLeather(int amount)
     {
-        rottenMeat += amount;
-        rottenMeatAmount.SetText("X" + rottenMeat.ToString());
+        leather += amount;
+        leatherAmount.SetText("X" + leather.ToString());
     }
 }

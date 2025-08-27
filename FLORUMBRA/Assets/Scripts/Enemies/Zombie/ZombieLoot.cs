@@ -12,19 +12,19 @@ public class ZombieLoot : MonoBehaviour
     public TextMeshProUGUI crownQuantityText;
     public GameObject crownLoot;
 
-    public TextMeshProUGUI rottenMeatQuantityText;
-    public GameObject rottenMeatLoot;
+    public TextMeshProUGUI leatherQuantityText;
+    public GameObject leatherLoot;
 
     private bool nextToPlayer = false;
     private bool defineCrownValue = true;
     private bool crownWasDropped = false;
 
-    private bool defineRottenMeatValue = true;
-    private bool rottenMeatWasDropped = false;
+    private bool defineLeatherValue = true;
+    private bool leatherWasDropped = false;
 
     private int enemyDropedLoot = 0;
     public int crownQuantityToPickup;
-    public int rottenMeatQuantityToPickup;
+    public int leatherQuantityToPickup;
 
     private void Start()
     {
@@ -40,7 +40,7 @@ public class ZombieLoot : MonoBehaviour
             nextToPlayer = false;
 
         EnemyDropedCrown();
-        EnemyDropedRottenMeat();
+        EnemyDropedLeather();
 
         if (nextToPlayer && enemyDropedLoot >= 1)
             loot.SetActive(true);
@@ -55,7 +55,7 @@ public class ZombieLoot : MonoBehaviour
             if (zombie.hp.value <= 0)
             {
                 int CrownDrop = Random.Range(0, 100);
-                int crownQuantity = Random.Range(10, 35);
+                int crownQuantity = Random.Range(25, 100);
 
                 if (CrownDrop <= 60)
                 {
@@ -82,57 +82,57 @@ public class ZombieLoot : MonoBehaviour
         crownLoot.SetActive(false);
         enemyDropedLoot -= 1;
 
-        if (rottenMeatWasDropped)
-            rottenMeatLoot.transform.localPosition = new Vector2(0, 90);
+        if (leatherWasDropped)
+            leatherLoot.transform.localPosition = new Vector2(0, 90);
     }
 
-    private void EnemyDropedRottenMeat()
+    private void EnemyDropedLeather()
     {
-        if (defineRottenMeatValue)
+        if (defineLeatherValue)
         {
             if (zombie.hp.value <= 0)
             {
-                int rottenMeatDrop = Random.Range(0, 100);
-                int rottenMeatQuantity = Random.Range(5, 15);
+                int leatherDrop = Random.Range(0, 100);
+                int leatherQuantity = Random.Range(1, 5);
 
-                if (rottenMeatDrop <= 15)
+                if (leatherDrop <= 40)
                 {
                     enemyDropedLoot += 1;
                     if (crownWasDropped)
-                        rottenMeatLoot.transform.localPosition = new Vector2(0, -1000);
+                        leatherLoot.transform.localPosition = new Vector2(0, -1000);
                     else
-                        rottenMeatLoot.transform.localPosition = new Vector2(0, 90);
-                    rottenMeatLoot.SetActive(true);
-                    rottenMeatQuantityToPickup = rottenMeatQuantity;
-                    rottenMeatQuantityText.SetText("X" + rottenMeatQuantity.ToString());
-                    rottenMeatWasDropped = true;
+                        leatherLoot.transform.localPosition = new Vector2(0, 90);
+                    leatherLoot.SetActive(true);
+                    leatherQuantityToPickup = leatherQuantity;
+                    leatherQuantityText.SetText("X" + leatherQuantity.ToString());
+                    leatherWasDropped = true;
                 }
                 else
                 {
-                    rottenMeatLoot.SetActive(false);
+                    leatherLoot.SetActive(false);
                 }
 
-                defineRottenMeatValue = false;
+                defineLeatherValue = false;
             }
         }
     }
 
-    public void OnLootRottenMeat()
+    public void OnLootLeather()
     {
-        player.AddRottenMeat(rottenMeatQuantityToPickup);
-        rottenMeatLoot.SetActive(false);
+        player.AddLeather(leatherQuantityToPickup);
+        leatherLoot.SetActive(false);
         enemyDropedLoot -= 1;
     }
 
     public void ResetLootDrop()
     {
         defineCrownValue = true;
-        defineRottenMeatValue = true;
+        defineLeatherValue = true;
         crownWasDropped = false;
-        rottenMeatWasDropped = false;
+        leatherWasDropped = false;
         enemyDropedLoot = 0;
         crownLoot.SetActive(false);
-        rottenMeatLoot.SetActive(false);
+        leatherLoot.SetActive(false);
         loot.SetActive(false);
     }
 }

@@ -55,7 +55,7 @@ public class SkeletonLoot : MonoBehaviour
             if (skeleton.hp.value <= 0)
             {
                 int CrownDrop = Random.Range(0, 100);
-                int crownQuantity = Random.Range(5, 15);
+                int crownQuantity = Random.Range(5, 25);
 
                 if (CrownDrop <= 85)
                 {
@@ -93,9 +93,9 @@ public class SkeletonLoot : MonoBehaviour
             if (skeleton.hp.value <= 0)
             {
                 int metalDrop = Random.Range(0, 100);
-                int metalQuantity = Random.Range(5, 15);
+                int metalQuantity = Random.Range(1, 3);
 
-                if (metalDrop <= 30)
+                if (metalDrop <= 45)
                 {
                     enemyDropedLoot += 1;
                     if(crownWasDropped)

@@ -19,28 +19,14 @@ public class BirdHouseFunctions : MonoBehaviour
             interactionButtonDisplay.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E))
             {
-                RestorePlayerCondition();
+                player.RestorePlayerStatus();
                 ResetEnemies();
             }
         }
         else
         {
             interactionButtonDisplay.SetActive(false);
-            player.resting = false;
         }
-    }
-
-    void RestorePlayerCondition()
-    {
-        player.hp += player.hpBar.maxValue - player.hpBar.value;
-        player.mana += player.manaBar.maxValue - player.manaBar.value;
-        player.stamina += player.staminaBar.maxValue - player.staminaBar.value;
-        player.hpPotion = player.allocatedHpPotion;
-        player.manaPotion = player.allocatedManaPotion;
-        player.staminaPotion = player.allocatedStaminaPotion;
-        player.resting = true;
-        player.ressurrecting = false;
-        player.currentSummon.OnRessurrect();
     }
 
     void ResetEnemies()
