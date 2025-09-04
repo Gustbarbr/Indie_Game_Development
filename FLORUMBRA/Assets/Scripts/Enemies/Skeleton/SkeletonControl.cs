@@ -116,6 +116,11 @@ public class SkeletonControl : MonoBehaviour, IDamageable
 
             hudHpBar.SetActive(false);
 
+            int natureSoulQuatity = Random.Range(5, 15);
+
+            player.natureSoul += natureSoulQuatity;
+            player.natureSoulAmount.SetText(player.natureSoul.ToString());
+
             // O objeto responsavel pelo ataque eh o segundo filho
             Transform attack = transform.GetChild(2);
             attack.gameObject.SetActive(false); // Desativa o segundo filho

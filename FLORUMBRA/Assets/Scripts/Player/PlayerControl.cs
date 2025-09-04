@@ -38,6 +38,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     public TextMeshProUGUI levelText;
     public int crown = 0;
     public TextMeshProUGUI crownAmount;
+    public int natureSoul = 0;
+    public TextMeshProUGUI natureSoulAmount;
 
     [Header("Inventário")]
     public TextMeshProUGUI metalAmount;
@@ -110,6 +112,7 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         allocatedStaminaPotion = staminaPotion;
         levelText.SetText(level.ToString());
         crownAmount.SetText("0");
+        natureSoulAmount.SetText("0");
     }
 
     // Por conta do rigidbody é mais recomendado usar fixedupdate

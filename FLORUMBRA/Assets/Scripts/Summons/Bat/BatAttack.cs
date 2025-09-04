@@ -10,6 +10,7 @@ public class BatAttack : MonoBehaviour
     public float attackCooldown;
     public CircleCollider2D attackCollider;
     [SerializeField] private int damage = 10;
+    public int level = 1;
     public int numberOfAttacks = 5;
 
     void Start()
@@ -41,7 +42,7 @@ public class BatAttack : MonoBehaviour
 
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(damage * level);
                 attackCooldown = 0;
                 numberOfAttacks -= 1;
                 attackCollider.enabled = false;

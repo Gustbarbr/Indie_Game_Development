@@ -7,6 +7,7 @@ public class WolfAttack : MonoBehaviour
     public float attackCooldown;
     public CircleCollider2D attackCollider;
     [SerializeField] private int damage = 20;
+    public int level = 1;
 
     void Update()
     {
@@ -24,7 +25,7 @@ public class WolfAttack : MonoBehaviour
 
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(damage * level);
                 attackCooldown = 0;
                 attackCollider.enabled = false;
             }

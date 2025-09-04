@@ -16,6 +16,7 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
     private float detectionRange = 20;
 
     private int damage = 5;
+    public int level = 1;
     public int poisonMeter = 0;
 
     void Start()
@@ -58,9 +59,9 @@ public class RatControl : MonoBehaviour, ISummon, IDamageable
 
         if (poisonEnemy != null)
         {
-            poisonEnemy.TakeDamage(damage);
+            poisonEnemy.TakeDamage(damage * level);
 
-            poisonMeter += 100;
+            poisonMeter += 100 * level;
 
             if (poisonMeter >= 100)
             {

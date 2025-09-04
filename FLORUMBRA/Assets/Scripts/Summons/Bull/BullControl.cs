@@ -13,6 +13,7 @@ public class BullControl : MonoBehaviour, ISummon
     public PlayerControl player;
     private float moveSpeed = 5;
     private int damage = 40;
+    public int level = 1;
     private Vector2 summonDirection;
 
     // Armazena os inimigos em uma hash, evitando causar duas vezes o mesmo dano
@@ -83,7 +84,7 @@ public class BullControl : MonoBehaviour, ISummon
 
                 if (dealDamage != null) {
                     // Causa dano ao inimigo
-                    dealDamage.TakeDamage(damage);
+                    dealDamage.TakeDamage(damage * level);
                     // Adiciona o inimigo danificado a hash, evitando tomar duas vezes o dano
                     damagedEnemies.Add(enemy);
                 }
