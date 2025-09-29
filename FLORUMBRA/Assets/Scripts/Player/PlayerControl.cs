@@ -7,14 +7,16 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 {
-    Rigidbody2D rb;
     public int def = 0;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
 
     [Header("Movimentação")]
     [SerializeField] float velocity = 5;
     [SerializeField] float baseSpeed = 5;
     [SerializeField] float sprintVelocity = 2.5f;
     [SerializeField] bool exhaustion = false;
+    [SerializeField] bool canRun = true;
 
     [Header("Esquiva")]
     public float dashDistance = 1f;
@@ -118,7 +120,8 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
     // Por conta do rigidbody é mais recomendado usar fixedupdate
     void FixedUpdate()
     {
-        PlayerMovement();
+        if (canRun == true) 
+            PlayerMovement();
     }
 
     // Por ser necessário atualizar frame a frama é mais recomendado usar update
@@ -155,6 +158,11 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
         {
             transform.localScale = new Vector2(-1, 1);
         }
+
+        if(horizontalMovement != 0)
+            animator.SetBool("isRunning", true);
+        else
+            animator.SetBool("isRunning", false);
 
         // Se o player apertar para correr e não estiver exausto, vai começar a correr
         if (sprint && !exhaustion)
@@ -246,6 +254,10 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
             }
                 
             if (stamina <= 0) stamina = 0;
+
+            animator.SetBool("isAttacking", true);
+
+            canRun = false;
         }
 
         // Só pode atacar se o botão do mouse for solto, estiver fora do tempo de recarga e tiver stamina
@@ -267,6 +279,10 @@ public class PlayerControl : MonoBehaviour, IApplyPoison, IDamageable
 
             // Entra em tempo de recarga
             arrowRecharge = 0;
+
+            animator.SetBool("isAttacking", false);
+
+            canRun = true;
         }
     }
 
