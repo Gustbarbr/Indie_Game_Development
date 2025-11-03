@@ -106,9 +106,9 @@ public class ZombieControl : MonoBehaviour, IApplyBleed, IApplyPoison, IDamageab
 
         // O inimigo vira em direção ao ponto que ele está indo, mudando a direção do Detection Range com ele
         if (target.position.x > transform.position.x)
-            transform.localScale = new Vector2(1, 1);
+            transform.localScale = new Vector2(0.8f, 0.8f);
         else if (target.position.x < transform.position.x)
-            transform.localScale = new Vector2(-1, 1);
+            transform.localScale = new Vector2(-0.8f, 0.8f);
     }
 
     public void TakeDamage(float amount)
